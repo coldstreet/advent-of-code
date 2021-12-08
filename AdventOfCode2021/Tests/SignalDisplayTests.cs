@@ -16,7 +16,7 @@ namespace AdventOfCode2021.Tests
             var result = Day8_SignalDisplay.CountDigits_2_4_5_7(input);
 
             // assert
-            Assert.AreEqual(26, result);
+            Assert.AreEqual(473, result);
         }
     }
 }
