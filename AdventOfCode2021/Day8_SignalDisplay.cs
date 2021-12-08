@@ -2,7 +2,7 @@
 {
     public static class Day8_SignalDisplay
     {
-        public static int CountDigits_2_4_5_7(string[] signalsAndOutputs)
+        public static int CountDigits_1_4_7_8(string[] signalsAndOutputs)
         {
             var outputs = new List<string[]>();
             foreach (var signalAndOutput in signalsAndOutputs)
