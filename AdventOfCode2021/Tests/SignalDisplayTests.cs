@@ -18,5 +18,19 @@ namespace AdventOfCode2021.Tests
             // assert
             Assert.AreEqual(473, result);
         }
+
+        // Day 8
+        [Test]
+        public void TestSumOfAllDigits()
+        {
+            // arrange
+            var input = File.ReadLines("Tests/SignalDisplayInputV1.txt").ToArray();
+
+            // act
+            var result = Day8_SignalDisplay.SumAllDigits(input);
+
+            // assert
+            Assert.AreEqual(1097568, result);
+        }
     }
 }
