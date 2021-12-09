@@ -27,8 +27,6 @@
                         sum += grid[i][j] + 1;
                     }
                 }
-
-                
             }
                
             return sum;
@@ -58,21 +56,7 @@
                         grid[i][j] < grid[i][right])
                     {
                         // basin found
-                        int count = 1;
-                        counted[i,j] = true;
-
-                        // look left
-                        count += CountIncreasingAdjacentGrids(i, j - 1, grid[i][j], grid, counted, maxRowIndex, maxColumnIndex);
-
-                        // look up
-                        count += CountIncreasingAdjacentGrids(i + 1, j, grid[i][j], grid, counted, maxRowIndex, maxColumnIndex);
-
-                        // look right
-                        count += CountIncreasingAdjacentGrids(i, j + 1, grid[i][j], grid, counted, maxRowIndex, maxColumnIndex);
-
-                        // look down
-                        count += CountIncreasingAdjacentGrids(i - 1, j, grid[i][j], grid, counted, maxRowIndex, maxColumnIndex);
-
+                        int count = CountIncreasingAdjacentGrids(i, j, int.MinValue, grid, counted, maxRowIndex, maxColumnIndex); ;
                         basinSizes.Add(count);
                     }
                 }
