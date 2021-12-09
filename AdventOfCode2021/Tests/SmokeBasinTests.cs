@@ -20,5 +20,20 @@ namespace AdventOfCode2021.Tests
             // assert
             Assert.AreEqual(512, result);
         }
+
+        [Test]
+        public void TestSizeOfAllBasins()
+        {
+            // arrange - read grid from file and load into jagged array 
+            int[][] input = File.ReadAllLines("Tests/SmokeBasinGridV1.txt")
+                   .Select(l => l.ToCharArray().Select(i => (int)Char.GetNumericValue(i)).ToArray())
+                   .ToArray();
+
+            // act
+            var result = Day9_SmokeBasin.FindSizeOfAllBasins(input);
+
+            // assert
+            Assert.AreEqual(1600104, result);
+        }
     }
 }
