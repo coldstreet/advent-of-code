@@ -2,7 +2,7 @@
 {
     public static class Day10_SyntaxScoring
     {
-        public static int CalculateScore(string[] input)
+        public static int CalculateInvalidScore(string[] input)
         {
             // Algo:
             // All “left” remaining => incomplete
@@ -30,14 +30,65 @@
                     if (invalid)
                     {
                         score += ScoreInvalidChar(invalidChar);
-                        break;
+                        break; // corrupt
                     }
                 }
             }
 
             return score;
         }
-        
+
+        public static long CalculateIncompleteScore(string[] input)
+        {
+            var scores = new List<long>();
+            foreach (var line in input)
+            {
+                var validChunkChars = new bool[line.Length];
+                while (true)
+                {
+                    if (validChunkChars.All(x => x))
+                    {
+                        break; // complete chunks (i.e., not corrupt or incomplete)
+                    }
+
+                    if (ProveIncomplete(line, validChunkChars))
+                    {
+                        // we now know chunks are incomplete
+                        scores.Add(FindScoreFromIncompleteChunks(line, validChunkChars));
+                        break; 
+                    }
+
+                    (bool invalid, char invalidChar) = MarkValidChunks(line, validChunkChars);
+                    if (invalid)
+                    {
+                        break; // corrupt
+                    }
+                }
+            }
+
+            // return middle score (list is always odd numbered)
+            int middleIndex = (int) Math.Floor((double) (scores.Count / 2));
+            return scores.OrderBy(x => x).ToArray()[middleIndex];
+        }
+
+        private static long FindScoreFromIncompleteChunks(string chunks, bool[] validChunkChars)
+        {
+            // assumes only left chars are marked as not valid yet
+
+            long score = 0;
+            for (int i = chunks.Length - 1; i >= 0; i--)
+            {
+                if (validChunkChars[i])
+                {
+                    continue;
+                }
+
+                score = (5 * score) + ScoreMissingChar(chunks[i]);
+            }
+
+            return score;
+        }
+
         private static int ScoreInvalidChar(char invalidChar) =>
             invalidChar switch
             {
@@ -45,6 +96,16 @@
                 ']' => 57,
                 '}' => 1197,
                 '>' => 25137,
+                _ => 0
+            };
+
+        private static int ScoreMissingChar(char incompleteChar) =>
+            incompleteChar switch
+            {
+                '(' => 1,
+                '[' => 2,
+                '{' => 3,
+                '<' => 4,
                 _ => 0
             };
 
