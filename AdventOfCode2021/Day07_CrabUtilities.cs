@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode2021
 {
-    public static class Day7_CrabUtilities
+    public static class Day07_CrabUtilities
     {
         public static int FindFuelToMinimizeAlignmentPosition(int[] currentPositions, bool useHighFuelBurn = false)
         {

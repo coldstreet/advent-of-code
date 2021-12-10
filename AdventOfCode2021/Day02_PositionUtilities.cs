@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode2021
 {
-    public class Day2_PositionUtilities
+    public class Day02_PositionUtilities
     {
         public static (int, int) DetermineFinalPosition((string, int)[] commandsAndPositions)
         {

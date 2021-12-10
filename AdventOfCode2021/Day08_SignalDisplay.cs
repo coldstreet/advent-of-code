@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode2021
 {
-    public static class Day8_SignalDisplay
+    public static class Day08_SignalDisplay
     {
         public static int CountDigits_1_4_7_8(string[] signalsAndOutputs)
         {

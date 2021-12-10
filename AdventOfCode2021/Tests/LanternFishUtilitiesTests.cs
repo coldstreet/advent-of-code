@@ -17,7 +17,7 @@ namespace AdventOfCode2021.Tests
                 .ToArray();
 
             // act
-            var result = Day6_LanternFishUtilities.GetNumberOfFishAfterTime(ages, 80);
+            var result = Day06_LanternFishUtilities.GetNumberOfFishAfterTime(ages, 80);
 
             // assert
             Assert.AreEqual(372984, result);
@@ -34,7 +34,7 @@ namespace AdventOfCode2021.Tests
                 .ToArray();
 
             // act
-            var result = Day6_LanternFishUtilities.GetNumberOfFishAfterTime(ages, 256);
+            var result = Day06_LanternFishUtilities.GetNumberOfFishAfterTime(ages, 256);
 
             // assert
             Assert.AreEqual(1681503251694, result);

@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode2021
 {
-    public class Day3_PowerConsumptionUtilities
+    public class Day03_PowerConsumptionUtilities
     {
         // Day 3, part I
         public static int GetPowerConsumption(string[] binaryNumbers)

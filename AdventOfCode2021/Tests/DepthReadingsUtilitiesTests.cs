@@ -15,7 +15,7 @@ namespace AdventOfCode2021.Tests
                 .ToArray();
 
             // act
-            var result = Day1_DepthReadingUtilities.CountDepthIncreases(input);
+            var result = Day01_DepthReadingUtilities.CountDepthIncreases(input);
 
             // assert
             Assert.AreEqual(1374, result);
@@ -31,7 +31,7 @@ namespace AdventOfCode2021.Tests
                 .ToArray();
 
             // act
-            var result = Day1_DepthReadingUtilities.CountDepthIncreasesByWindow(input);
+            var result = Day01_DepthReadingUtilities.CountDepthIncreasesByWindow(input);
 
             // assert
             Assert.AreEqual(1418, result);

@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode2021
 {
-    public static class Day9_SmokeBasin
+    public static class Day09_SmokeBasin
     {
         public static int FindLowPoints(int[][] grid)
         {

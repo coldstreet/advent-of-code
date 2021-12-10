@@ -13,7 +13,7 @@ namespace AdventOfCode2021.Tests
             var input = ConvertToCommandAndPositionList(File.ReadLines("Tests/CommandsAndPositionsV1.txt").ToArray());
 
             // act
-            var (x, y) = Day2_PositionUtilities.DetermineFinalPosition(input);
+            var (x, y) = Day02_PositionUtilities.DetermineFinalPosition(input);
 
             // assert
             Assert.AreEqual(1893605, x * y);
@@ -27,7 +27,7 @@ namespace AdventOfCode2021.Tests
             var input = ConvertToCommandAndPositionList(File.ReadLines("Tests/CommandsAndPositionsV1.txt").ToArray());
 
             // act
-            var (x, y) = Day2_PositionUtilities.DetermineFinalPositionUsingAim(input);
+            var (x, y) = Day02_PositionUtilities.DetermineFinalPositionUsingAim(input);
 
             // assert
             Assert.AreEqual(2120734350, x * y);

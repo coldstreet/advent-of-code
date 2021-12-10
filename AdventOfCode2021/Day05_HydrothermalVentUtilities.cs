@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode2021
 {
-    public static class Day5_HydrothermalVentUtilities
+    public static class Day05_HydrothermalVentUtilities
     {
         public static int GetCountOfGridPointsToAvoid(string[] input)
         {

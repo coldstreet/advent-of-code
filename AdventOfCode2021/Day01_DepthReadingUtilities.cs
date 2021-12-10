@@ -2,7 +2,7 @@
 
 namespace AdventOfCode2021
 {
-    public class Day1_DepthReadingUtilities
+    public class Day01_DepthReadingUtilities
     {
         public static int CountDepthIncreases(int[] readings)
         {

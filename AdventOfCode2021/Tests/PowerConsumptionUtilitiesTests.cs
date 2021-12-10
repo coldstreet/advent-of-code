@@ -13,7 +13,7 @@ namespace AdventOfCode2021.Tests
             var input = File.ReadLines("Tests/PowerConsumptionBinaryNumbersV1.txt").ToArray();
 
             // act
-            var result = Day3_PowerConsumptionUtilities.GetPowerConsumption(input);
+            var result = Day03_PowerConsumptionUtilities.GetPowerConsumption(input);
 
             // assert
             Assert.AreEqual(1131506, result);
@@ -28,7 +28,7 @@ namespace AdventOfCode2021.Tests
             var input = File.ReadLines("Tests/PowerConsumptionBinaryNumbersV1.txt").ToArray();
 
             // act
-            var result = Day3_PowerConsumptionUtilities.GetLifeSupportRating(input);
+            var result = Day03_PowerConsumptionUtilities.GetLifeSupportRating(input);
 
             // assert
             Assert.AreEqual(7863147, result);

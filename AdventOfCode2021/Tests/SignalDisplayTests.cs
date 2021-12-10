@@ -13,7 +13,7 @@ namespace AdventOfCode2021.Tests
             var input = File.ReadLines("Tests/SignalDisplayInputV1.txt").ToArray();
 
             // act
-            var result = Day8_SignalDisplay.CountDigits_1_4_7_8(input);
+            var result = Day08_SignalDisplay.CountDigits_1_4_7_8(input);
 
             // assert
             Assert.AreEqual(473, result);
@@ -27,7 +27,7 @@ namespace AdventOfCode2021.Tests
             var input = File.ReadLines("Tests/SignalDisplayInputV1.txt").ToArray();
 
             // act
-            var result = Day8_SignalDisplay.SumAllDigits(input);
+            var result = Day08_SignalDisplay.SumAllDigits(input);
 
             // assert
             Assert.AreEqual(1097568, result);

@@ -13,7 +13,7 @@ namespace AdventOfCode2021.Tests
             var input = File.ReadLines("Tests/HydrothermalVentLinesV1.txt").ToArray();
 
             // act
-            var result = Day5_HydrothermalVentUtilities.GetCountOfGridPointsToAvoid(input);
+            var result = Day05_HydrothermalVentUtilities.GetCountOfGridPointsToAvoid(input);
 
             // assert
             Assert.AreEqual(5145, result);
@@ -28,7 +28,7 @@ namespace AdventOfCode2021.Tests
             var input = File.ReadLines("Tests/HydrothermalVentLinesV1.txt").ToArray();
 
             // act
-            var result = Day5_HydrothermalVentUtilities.GetCountOfGridPointsToAvoidWithDiagnols(input);
+            var result = Day05_HydrothermalVentUtilities.GetCountOfGridPointsToAvoidWithDiagnols(input);
 
             // assert
             Assert.AreEqual(16518, result);

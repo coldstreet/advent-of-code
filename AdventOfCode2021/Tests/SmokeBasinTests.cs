@@ -15,7 +15,7 @@ namespace AdventOfCode2021.Tests
                    .ToArray();
 
             // act
-            var result = Day9_SmokeBasin.FindLowPoints(input);
+            var result = Day09_SmokeBasin.FindLowPoints(input);
 
             // assert
             Assert.AreEqual(512, result);
@@ -30,7 +30,7 @@ namespace AdventOfCode2021.Tests
                    .ToArray();
 
             // act
-            var result = Day9_SmokeBasin.FindSizeOfAllBasins(input);
+            var result = Day09_SmokeBasin.FindSizeOfAllBasins(input);
 
             // assert
             Assert.AreEqual(1600104, result);

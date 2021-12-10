@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode2021
 {
-    public static class Day6_LanternFishUtilities
+    public static class Day06_LanternFishUtilities
     {
         public static long GetNumberOfFishAfterTime(int[] currentFishAges, int days)
         {

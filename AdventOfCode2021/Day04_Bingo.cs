@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode2021
 {
-    public static class Day4_Bingo
+    public static class Day04_Bingo
     {
         public static int PlayBingo(string[] input)
         {

@@ -13,7 +13,7 @@ namespace AdventOfCode2021.Tests
             var input = File.ReadLines("Tests/BingoInputV1.txt").ToArray();
 
             // act
-            var result = Day4_Bingo.PlayBingo(input);
+            var result = Day04_Bingo.PlayBingo(input);
 
             // assert
             Assert.AreEqual(39984, result);
@@ -27,7 +27,7 @@ namespace AdventOfCode2021.Tests
             var input = File.ReadLines("Tests/BingoInputV1.txt").ToArray();
 
             // act
-            var result = Day4_Bingo.PlayBingoButGetScoreFromLastBoard(input);
+            var result = Day04_Bingo.PlayBingoButGetScoreFromLastBoard(input);
 
             // assert
             Assert.AreEqual(8468, result);

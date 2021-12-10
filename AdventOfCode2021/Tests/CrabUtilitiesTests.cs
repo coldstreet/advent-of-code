@@ -16,7 +16,7 @@ namespace AdventOfCode2021.Tests
                 .ToArray();
 
             // act
-            var result = Day7_CrabUtilities.FindFuelToMinimizeAlignmentPosition(positions);
+            var result = Day07_CrabUtilities.FindFuelToMinimizeAlignmentPosition(positions);
 
             // assert
             Assert.AreEqual(348664, result);
@@ -34,7 +34,7 @@ namespace AdventOfCode2021.Tests
                 .ToArray();
 
             // act
-            var result = Day7_CrabUtilities.FindFuelToMinimizeAlignmentPosition(positions, true);
+            var result = Day07_CrabUtilities.FindFuelToMinimizeAlignmentPosition(positions, true);
 
             // assert
             Assert.AreEqual(100220525, result);
