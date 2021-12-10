@@ -16,7 +16,7 @@ namespace AdventOfCode2021.Tests
             var result = Day10_SyntaxScoring.CalculateScore(input);
 
             // assert
-            Assert.AreEqual(26397, result);
+            Assert.AreEqual(389589, result);
         }
     }
 }
