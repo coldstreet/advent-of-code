@@ -29,7 +29,7 @@ namespace AdventOfCode2021.Tests
             var result = Day10_SyntaxScoring.CalculateIncompleteScore(input);
 
             // assert
-            Assert.AreEqual(389589, result);
+            Assert.AreEqual(1190420163, result);
         }
     }
 }
