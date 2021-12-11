@@ -40,6 +40,9 @@
     <None Update="Tests\PowerConsumptionBinaryNumbersV1.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Tests\DumboOctopusEnergyLevelsV1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Tests\SyntaxChunksV1.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
