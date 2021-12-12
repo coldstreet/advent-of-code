@@ -7,23 +7,68 @@
             int totalFlashes = 0;          
             for (int steps = 0; steps < numberofSteps; steps++)
             {
-                int newFlashes = IncrementAllGridSquares(energyLevelGrid);
-                if (newFlashes == 0)
+                totalFlashes += PerformStep(energyLevelGrid);
+            }
+
+            return totalFlashes;
+        }
+
+        public static int FindStepWhenAllFlashingSynchronize(int[,] energyLevelGrid)
+        {
+            int step = 0;
+            bool allFlashesSynchronized = true;
+            for (int x = 0; x < energyLevelGrid.GetLength(0); x++)
+            {
+                for (int y = 0; y < energyLevelGrid.GetLength(1); y++)
                 {
-                    continue;
+                    if (energyLevelGrid[x, y] != 0)
+                    {
+                        allFlashesSynchronized = false;
+                        break;
+                    }
                 }
+            }
 
-                totalFlashes += newFlashes;
+            while(!allFlashesSynchronized)
+            {
+                PerformStep(energyLevelGrid);
+                step++;
+                allFlashesSynchronized = true;
+                for (int x = 0; x < energyLevelGrid.GetLength(0); x++)
+                {
+                    for (int y = 0; y < energyLevelGrid.GetLength(1); y++)
+                    {
+                        if (energyLevelGrid[x, y] != 0)
+                        {
+                            allFlashesSynchronized = false;
+                            break;
+                        }
+                    }
+                }
+            }
 
-                // Now account for adjacent squares that flashed (i.e., just turned zero) and count any subsequent new flashes
-                var flashSquaresProcessed = new bool[energyLevelGrid.GetLength(0), energyLevelGrid.GetLength(1)];
+            return step;
+        }
+
+        private static int PerformStep(int[,] energyLevelGrid)
+        {
+            int totalFlashes = 0;
+            int newFlashes = IncrementAllGridSquares(energyLevelGrid);
+            if (newFlashes == 0)
+            {
+                return 0;
+            }
+
+            totalFlashes += newFlashes;
+
+            // Now account for adjacent squares that flashed (i.e., just turned zero) and count any subsequent new flashes
+            var flashSquaresProcessed = new bool[energyLevelGrid.GetLength(0), energyLevelGrid.GetLength(1)];
+            newFlashes = IncrementAdjacentSquaresForNewFlashes(energyLevelGrid, flashSquaresProcessed);
+            totalFlashes += newFlashes;
+            while (newFlashes > 0)
+            {
                 newFlashes = IncrementAdjacentSquaresForNewFlashes(energyLevelGrid, flashSquaresProcessed);
                 totalFlashes += newFlashes;
-                while (newFlashes > 0)
-                {
-                    newFlashes = IncrementAdjacentSquaresForNewFlashes(energyLevelGrid, flashSquaresProcessed);
-                    totalFlashes += newFlashes;
-                }
             }
 
             return totalFlashes;
