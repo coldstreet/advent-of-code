@@ -16,6 +16,19 @@
         public static int FindStepWhenAllFlashingSynchronize(int[,] energyLevelGrid)
         {
             int step = 0;
+            bool allFlashesSynchronized = AreFlashesSynchronized(energyLevelGrid);
+            while (!allFlashesSynchronized)
+            {
+                PerformStep(energyLevelGrid);
+                step++;
+                allFlashesSynchronized = AreFlashesSynchronized(energyLevelGrid);
+            }
+
+            return step;
+        }
+
+        private static bool AreFlashesSynchronized(int[,] energyLevelGrid)
+        {
             bool allFlashesSynchronized = true;
             for (int x = 0; x < energyLevelGrid.GetLength(0); x++)
             {
@@ -29,25 +42,7 @@
                 }
             }
 
-            while(!allFlashesSynchronized)
-            {
-                PerformStep(energyLevelGrid);
-                step++;
-                allFlashesSynchronized = true;
-                for (int x = 0; x < energyLevelGrid.GetLength(0); x++)
-                {
-                    for (int y = 0; y < energyLevelGrid.GetLength(1); y++)
-                    {
-                        if (energyLevelGrid[x, y] != 0)
-                        {
-                            allFlashesSynchronized = false;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            return step;
+            return allFlashesSynchronized;
         }
 
         private static int PerformStep(int[,] energyLevelGrid)
