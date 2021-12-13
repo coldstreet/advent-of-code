@@ -37,7 +37,6 @@ namespace AdventOfCode2021
             if (caveName == "end")
             {
                 allPaths.Add(string.Join(",", currentPath));
-                //Debug.WriteLine(string.Join(",", currentPath));
                 return;
             }
 
@@ -48,7 +47,7 @@ namespace AdventOfCode2021
             {
                 caves[currentPath[currentPath.Count - 1]].TimesVisited--;
                 currentPath.RemoveAt(currentPath.Count - 1);
-                caves[currentPath[currentPath.Count - 1]].TimesVisited--;
+                //caves[currentPath[currentPath.Count - 1]].TimesVisited--;
                 currentPath.RemoveAt(currentPath.Count - 1);
                 return;
             }
@@ -62,8 +61,7 @@ namespace AdventOfCode2021
 
             if (caveName != "start")
             {
-                // todo: hack - counting is off
-                caves[caveName].TimesVisited = caves[caveName].TimesVisited - 1 < 0 ? 0 : caves[caveName].TimesVisited - 1;
+                caves[caveName].TimesVisited--;
             }             
 
             return;

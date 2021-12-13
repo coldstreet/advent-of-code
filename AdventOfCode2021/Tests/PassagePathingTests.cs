@@ -16,7 +16,7 @@ namespace AdventOfCode2021.Tests
             var result = Day12_PassagePathing.CountAllPaths(input);
 
             // assert
-            Assert.AreEqual(19, result);
+            Assert.AreEqual(4338, result);
         }
     }
 }
