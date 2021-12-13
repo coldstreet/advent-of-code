@@ -62,7 +62,8 @@ namespace AdventOfCode2021
 
             if (caveName != "start")
             {
-                caves[caveName].TimesVisited--;
+                // todo: hack - counting is off
+                caves[caveName].TimesVisited = caves[caveName].TimesVisited - 1 < 0 ? 0 : caves[caveName].TimesVisited - 1;
             }             
 
             return;
