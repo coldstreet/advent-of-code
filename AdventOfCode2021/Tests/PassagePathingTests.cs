@@ -7,7 +7,7 @@ namespace AdventOfCode2021.Tests
     {
         // Day 12
         [Test]
-        public void TestCountingEasyDigits()
+        public void TestCountingAllPaths()
         {
             // arrange
             var input = File.ReadLines("Tests/PassagePathSegmentsV1.txt").ToArray();
