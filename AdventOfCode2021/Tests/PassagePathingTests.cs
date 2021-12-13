@@ -18,5 +18,18 @@ namespace AdventOfCode2021.Tests
             // assert
             Assert.AreEqual(4338, result);
         }
+
+        [Test]
+        public void TestCountingAllPathsWithOneSmallCaveTwice()
+        {
+            // arrange
+            var input = File.ReadLines("Tests/PassagePathSegmentsV1.txt").ToArray();
+
+            // act
+            var result = Day12_PassagePathing.CountAllPathsWithOneSmallCaveTwice(input);
+
+            // assert
+            Assert.AreEqual(4338, result);
+        }
     }
 }

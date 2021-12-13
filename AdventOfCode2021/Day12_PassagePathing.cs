@@ -12,6 +12,8 @@ namespace AdventOfCode2021
 
             public IList<string> ConnectedCaves { get; set; }
 
+            public bool IsSmallCave => Name.Any(char.IsLower);
+
             public Cave(string name)
             {
                 Name = name;
@@ -31,7 +33,19 @@ namespace AdventOfCode2021
             return totalPaths;
         }
 
-        private static void VisitCave(string caveName, Dictionary<string, Cave> caves, List<string> currentPath, List<string> allPaths)
+        public static int CountAllPathsWithOneSmallCaveTwice(string[] input)
+        {
+            int totalPaths = 0;
+            Dictionary<string, Cave> caves = BuildCaveDictionary(input);
+
+            List<string> allPaths = new List<string>();
+            VisitCave("start", caves, new List<string>(), allPaths, true);
+
+            totalPaths = allPaths.Count();
+            return totalPaths;
+        }
+
+        private static void VisitCave(string caveName, Dictionary<string, Cave> caves, List<string> currentPath, List<string> allPaths, bool allowOneSmallCaveTwice = false)
         {
             currentPath.Add(caveName);
             if (caveName == "end")
@@ -40,23 +54,25 @@ namespace AdventOfCode2021
                 return;
             }
 
-            caves[caveName].TimesVisited++;
-
-            var smallCave = caveName.Any(char.IsLower) && caveName != "start";
-            if (smallCave && caves[caveName].TimesVisited >= 2)
+            if (caves[caveName].IsSmallCave && caveName != "start")
             {
-                caves[currentPath[currentPath.Count - 1]].TimesVisited--;
-                currentPath.RemoveAt(currentPath.Count - 1);
-                //caves[currentPath[currentPath.Count - 1]].TimesVisited--;
-                currentPath.RemoveAt(currentPath.Count - 1);
-                return;
+                bool oneSmallCaveVisitedTwice = caves.Values.Any(x => x.IsSmallCave && x.TimesVisited >= 2);
+                int smallCaveLimit = allowOneSmallCaveTwice && !oneSmallCaveVisitedTwice ? 2 : 1;
+                if (caves[caveName].TimesVisited >= smallCaveLimit)
+                {
+                    currentPath.RemoveAt(currentPath.Count - 1);
+                    currentPath.RemoveAt(currentPath.Count - 1);
+                    return;
+                }
             }
+
+            caves[caveName].TimesVisited++;
 
             var newPath = new string[currentPath.Count]; 
             currentPath.CopyTo(newPath);
             foreach (var connectedCaveName in caves[caveName].ConnectedCaves)
             {
-                VisitCave(connectedCaveName, caves, newPath.ToList(), allPaths);
+                VisitCave(connectedCaveName, caves, newPath.ToList(), allPaths, allowOneSmallCaveTwice);
             }
 
             if (caveName != "start")
