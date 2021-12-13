@@ -29,7 +29,7 @@ namespace AdventOfCode2021.Tests
             var result = Day12_PassagePathing.CountAllPathsWithOneSmallCaveTwice(input);
 
             // assert
-            Assert.AreEqual(4338, result);
+            Assert.AreEqual(114189, result);
         }
     }
 }
