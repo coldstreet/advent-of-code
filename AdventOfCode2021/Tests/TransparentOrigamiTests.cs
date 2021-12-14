@@ -29,7 +29,7 @@ namespace AdventOfCode2021.Tests
             var result = Day13_TransparentOrigami.FoldUpAndCountDots(input, false);
 
             // assert
-            Assert.AreEqual(693, result);
+            Assert.AreEqual(95, result);
         }
     }
 }

@@ -25,7 +25,7 @@
             Dictionary<string, Cave> caves = BuildCaveDictionary(input);
 
             List<string> allPaths = new List<string>();
-            VisitCave("start", caves, new List<string>(), allPaths);
+            VisitCave("start", caves, new Stack<string>(), allPaths);
 
             totalPaths = allPaths.Count();
             return totalPaths;
@@ -37,18 +37,18 @@
             Dictionary<string, Cave> caves = BuildCaveDictionary(input);
 
             List<string> allPaths = new List<string>();
-            VisitCave("start", caves, new List<string>(), allPaths, true);
+            VisitCave("start", caves, new Stack<string>(), allPaths, true);
 
             totalPaths = allPaths.Count();
             return totalPaths;
         }
 
-        private static void VisitCave(string caveName, Dictionary<string, Cave> caves, List<string> currentPath, List<string> allPaths, bool allowOneSmallCaveTwice = false)
+        private static void VisitCave(string caveName, Dictionary<string, Cave> caves, Stack<string> currentPath, List<string> allPaths, bool allowOneSmallCaveTwice = false)
         {
-            currentPath.Add(caveName);
+            currentPath.Push(caveName);
             if (caveName == "end")
             {
-                allPaths.Add(string.Join(",", currentPath));
+                allPaths.Add(string.Join(",", currentPath.Reverse().ToArray()));
                 return;
             }
 
@@ -58,25 +58,23 @@
                 int smallCaveLimit = allowOneSmallCaveTwice && !oneSmallCaveVisitedTwice ? 2 : 1;
                 if (caves[caveName].TimesVisited >= smallCaveLimit)
                 {
-                    currentPath.RemoveAt(currentPath.Count - 1);
-                    currentPath.RemoveAt(currentPath.Count - 1);
+                    currentPath.Pop();
+                    currentPath.Pop();
                     return;
                 }
             }
 
             caves[caveName].TimesVisited++;
 
-            var newPath = new string[currentPath.Count]; 
-            currentPath.CopyTo(newPath);
             foreach (var connectedCaveName in caves[caveName].ConnectedCaves)
             {
-                VisitCave(connectedCaveName, caves, newPath.ToList(), allPaths, allowOneSmallCaveTwice);
+                VisitCave(connectedCaveName, caves, CloneStack(currentPath), allPaths, allowOneSmallCaveTwice);
             }
 
             if (caveName != "start")
             {
                 caves[caveName].TimesVisited--;
-            }             
+            }
 
             return;
         }
@@ -119,6 +117,14 @@
             caves.Remove("end");
 
             return caves;
+        }
+
+        private static Stack<string> CloneStack(Stack<string> original)
+        {
+            var arr = new string[original.Count];
+            original.CopyTo(arr, 0);
+            Array.Reverse(arr);
+            return new Stack<string>(arr);
         }
     }
 }
