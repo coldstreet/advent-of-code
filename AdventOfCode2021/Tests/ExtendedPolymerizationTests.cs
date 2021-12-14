@@ -13,7 +13,7 @@ namespace AdventOfCode2021.Tests
             var input = File.ReadLines("Tests/ExtendedPolymerizationInputV1.txt").ToArray();
 
             // act
-            var result = Day14_ExtendedPolymerization.FindProductOfLeastAndMostLetters(input);
+            var result = Day14_ExtendedPolymerization.FindProductOfLeastAndMostLetters(input, 10);
 
             // assert
             Assert.AreEqual(1588, result);
