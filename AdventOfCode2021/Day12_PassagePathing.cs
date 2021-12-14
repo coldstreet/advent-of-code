@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace AdventOfCode2021
+﻿namespace AdventOfCode2021
 {
     public static class Day12_PassagePathing
     {
