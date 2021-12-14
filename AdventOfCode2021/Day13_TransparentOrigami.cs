@@ -1,8 +1,10 @@
-﻿namespace AdventOfCode2021
+﻿using System.Diagnostics;
+
+namespace AdventOfCode2021
 {
     public static class Day13_TransparentOrigami
     {
-        public static int FoldUpAndCountDots(string[] input)
+        public static int FoldUpAndCountDots(string[] input, bool doJustOneFold = false)
         {
             var separatorIndex = Array.IndexOf(input, "");
 
@@ -21,12 +23,16 @@
 
             // get fold instructions
             var foldInfo = input.TakeLast(input.Length - (separatorIndex + 1)).ToArray();
-            // for part I - TEMP
-            foldInfo = foldInfo.Take(1).ToArray();
-
-            int count = 0;
-            foreach(var foldInstruction in foldInfo)
+            
+            if (doJustOneFold)
             {
+                foldInfo = foldInfo.Take(1).ToArray();
+            }
+            
+            int totalCount = 0;
+            for (int i = 0; i < foldInfo.Length; i++)
+            {
+                string foldInstruction = foldInfo[i];
                 var newGridLengthX = maxIndexX + 1;
                 var newGridLengthY = maxIndexY + 1;
                 bool foldUp = false;
@@ -57,24 +63,37 @@
                     }
                 }
 
-                // count dots
+                // print dots
+                int count = 0;
                 for (int y = 0; y < newFoldedUpGrid.GetLength(1); y++)
                 {
                     for (int x = 0; x < newFoldedUpGrid.GetLength(0); x++)
                     {
+                        if (i == foldInfo.Length - 1)
+                        {
+                            Debug.Write(newFoldedUpGrid[x, y] == 1 ? "*" : ".");
+                        }
+
                         if (newFoldedUpGrid[x, y] == 1)
                         {
                             count++;
                         }
                     }
+
+                    if (i == foldInfo.Length - 1)
+                    {
+                        Debug.WriteLine("");
+                    }
                 }
+
+                totalCount += count;
 
                 maxIndexX = newGridLengthX - 1;
                 maxIndexY = newGridLengthY - 1;
+                grid = newFoldedUpGrid;
             }
 
-
-            return count;
+            return totalCount;
         }
     }
 }
