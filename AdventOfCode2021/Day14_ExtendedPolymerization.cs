@@ -2,7 +2,7 @@
 {
     public static class Day14_ExtendedPolymerization
     {
-        public static int FindProductOfLeastAndMostLetters(string[] input, int steps)
+        public static long FindMostMinusLeastLetters(string[] input, int steps)
         {
             var code = input[0];
 
@@ -12,7 +12,7 @@
                 .ToDictionary(k => k[0], v => v[1]);
 
             // build pairs count dictionary
-            var pairs = new Dictionary<string, int>();
+            var pairs = new Dictionary<string, long>();
             for (int i = 0; i < code.Length - 1; i++)
             {
                 var pair = code.Substring(i, 2);
@@ -26,7 +26,7 @@
             }
 
             // build alphabit count dictionary
-            var alphabitCounts = new Dictionary<char, int>(26);
+            var alphabitCounts = new Dictionary<char, long>(26);
             foreach (var c in code)
             {
                 if (!alphabitCounts.ContainsKey(c))
@@ -40,7 +40,7 @@
 
             while (steps > 0)
             {
-                var newPairs = new Dictionary<string, int>();
+                var newPairs = new Dictionary<string, long>();
                 var pairsToProcess = pairs.Keys;
 
                 foreach(var pair in pairsToProcess)
