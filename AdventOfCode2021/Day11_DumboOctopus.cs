@@ -2,6 +2,8 @@
 {
     public static class Day11_DumboOctopus
     {
+        // Note: use of x and y in this class are backwards :)
+
         public static int CountFlashesAfterSteps(int[,] energyLevelGrid, int numberofSteps)
         {
             int totalFlashes = 0;          
