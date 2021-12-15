@@ -11,7 +11,7 @@
                 .Select(l => l.Split(" -> "))
                 .ToDictionary(k => k[0], v => v[1]);
 
-            // build pairs list
+            // build pairs count dictionary
             var pairs = new Dictionary<string, int>();
             for (int i = 0; i < code.Length - 1; i++)
             {
@@ -25,6 +25,7 @@
                 pairs[pair]++;
             }
 
+            // build alphabit count dictionary
             var alphabitCounts = new Dictionary<char, int>(26);
             foreach (var c in code)
             {
@@ -50,20 +51,20 @@
                     var possibleNewPairB = insertAlpha + pair[1];
                     if (!newPairs.ContainsKey(possibleNewPairA))
                     {
-                        newPairs.Add(possibleNewPairA, 1);
+                        newPairs.Add(possibleNewPairA, increment);
                     }
                     else
                     {
-                        newPairs[possibleNewPairA]++;
+                        newPairs[possibleNewPairA] += increment;
                     }
 
                     if (!newPairs.ContainsKey(possibleNewPairB))
                     {
-                        newPairs.Add(possibleNewPairB, 1);
+                        newPairs.Add(possibleNewPairB, increment);
                     }
                     else
                     {
-                        newPairs[possibleNewPairB]++;
+                        newPairs[possibleNewPairB] += increment;
                     }
 
                     // update alphabit counts
@@ -85,7 +86,7 @@
             var minCount = alphabitCounts.Values.Min();
             var maxCount = alphabitCounts.Values.Max();
 
-            return minCount * maxCount;
+            return maxCount - minCount;
         }
     }
 }

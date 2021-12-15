@@ -16,7 +16,7 @@ namespace AdventOfCode2021.Tests
             var result = Day14_ExtendedPolymerization.FindProductOfLeastAndMostLetters(input, 10);
 
             // assert
-            Assert.AreEqual(1588, result);
+            Assert.AreEqual(2321, result);
         }
 
     }
