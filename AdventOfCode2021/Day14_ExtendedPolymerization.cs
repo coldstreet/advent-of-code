@@ -7,7 +7,7 @@
             var code = input[0];
 
             var insertInstructions = input
-                .Take(input.Length - 2)
+                .TakeLast(input.Length - 2)
                 .Select(l => l.Split(" -> "))
                 .ToDictionary(k => k[0], v => v[1]);
 
@@ -25,9 +25,8 @@
                 pairs[pair]++;
             }
 
-            // build alphabit counts
             var alphabitCounts = new Dictionary<char, int>(26);
-            foreach(var c in code)
+            foreach (var c in code)
             {
                 if (!alphabitCounts.ContainsKey(c))
                 {
@@ -38,29 +37,48 @@
                 alphabitCounts[c]++;
             }
 
-            while(steps > 0)
+            while (steps > 0)
             {
+                var newPairs = new Dictionary<string, int>();
                 var pairsToProcess = pairs.Keys;
+
                 foreach(var pair in pairsToProcess)
                 {
+                    var increment = pairs.Keys.Contains(pair) ? pairs[pair] : 1;
                     var insertAlpha = insertInstructions[pair];
-                    var insertAlphaChar = char.Parse(insertAlpha);
-
-                    // todo - update pair dictionary
-
-                    // todo - depends on number of pairs
-                    if (!alphabitCounts.ContainsKey(insertAlphaChar))
+                    var possibleNewPairA = pair[0] + insertAlpha;
+                    var possibleNewPairB = insertAlpha + pair[1];
+                    if (!newPairs.ContainsKey(possibleNewPairA))
                     {
-                        alphabitCounts.Add(insertAlphaChar, 1);
+                        newPairs.Add(possibleNewPairA, 1);
                     }
                     else
                     {
-                        alphabitCounts[insertAlphaChar]++;
+                        newPairs[possibleNewPairA]++;
                     }
 
+                    if (!newPairs.ContainsKey(possibleNewPairB))
+                    {
+                        newPairs.Add(possibleNewPairB, 1);
+                    }
+                    else
+                    {
+                        newPairs[possibleNewPairB]++;
+                    }
 
+                    // update alphabit counts
+                    var insertAlphaChar = char.Parse(insertAlpha);
+                    if (!alphabitCounts.ContainsKey(insertAlphaChar))
+                    {
+                        alphabitCounts.Add(insertAlphaChar, increment);
+                    }
+                    else
+                    {
+                        alphabitCounts[insertAlphaChar] += increment;
+                    }
                 }
 
+                pairs = newPairs;
                 steps--;
             }
 
