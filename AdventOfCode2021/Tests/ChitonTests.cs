@@ -20,9 +20,7 @@ namespace AdventOfCode2021.Tests
             var result = chiton.FindMinRiskLevelPath(input);
 
             // assert
-            Assert.AreEqual(40, result);
+            Assert.AreEqual(393, result);
         }
-
-    
     }
 }
