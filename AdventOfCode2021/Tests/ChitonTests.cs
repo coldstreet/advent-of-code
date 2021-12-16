@@ -14,9 +14,10 @@ namespace AdventOfCode2021.Tests
                 File.ReadAllLines("Tests/ChitonRiskLevelGridV1.txt")
                    .Select(l => l.ToCharArray().Select(i => (int)Char.GetNumericValue(i)).ToArray())
                    .ToList());
+            var chiton = new Day15_Chiton();
 
             // act
-            var result = Day15_Chiton.FindMinRiskLevelPath(input);
+            var result = chiton.FindMinRiskLevelPath(input);
 
             // assert
             Assert.AreEqual(40, result);
