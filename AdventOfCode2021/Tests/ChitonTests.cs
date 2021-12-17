@@ -22,5 +22,22 @@ namespace AdventOfCode2021.Tests
             // assert
             Assert.AreEqual(393, result);
         }
+
+        [Test]
+        public void TestFindMinRiskLevelPathWithExpandedGrid()
+        {
+            // arrange - read grid from file and load into multidimensional array 
+            var input = Helpers.TestUtilities.CreateRectangularArray(
+                File.ReadAllLines("Tests/ChitonRiskLevelGridV1.txt")
+                   .Select(l => l.ToCharArray().Select(i => (int)Char.GetNumericValue(i)).ToArray())
+                   .ToList());
+            var chiton = new Day15_Chiton();
+
+            // act
+            var result = chiton.FindMinRiskLevelPath(input, true);
+
+            // assert
+            Assert.AreEqual(2823, result);
+        }
     }
 }
