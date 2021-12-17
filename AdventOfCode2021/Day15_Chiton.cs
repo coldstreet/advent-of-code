@@ -2,16 +2,17 @@
 {
     public class Day15_Chiton
     {
+        // todo - this can be a static class as these variables don't need to be global
         private int[,] _caveRiskGrid = new int[0,0];
         private HashSet<(int, int)> _visited = new HashSet<(int, int)>();
         private int[,] _weightedRiskGrid = new int[0, 0];
 
-        public long FindMinRiskLevelPath(int[,] caveRiskGrid, bool enlargeInput = false)
+        public long FindMinRiskLevelPath(int[,] startingCaveRiskGrid, bool enlargeInput = false)
         {
-            _caveRiskGrid = caveRiskGrid;
+            _caveRiskGrid = startingCaveRiskGrid;
             if (enlargeInput)
             {
-                EnlargeInput(caveRiskGrid);
+                EnlargeInput(startingCaveRiskGrid);
             }
 
             var lengthX = _caveRiskGrid.GetLength(1);
@@ -49,34 +50,35 @@
                     break;
                 }
 
+                // right
                 if (IsValidSquareToVisit(x + 1, y))
                 {
-                    UpdateWeightedRiskGrid(x + 1, y, _weightedRiskGrid[x, y], priorityQueue);
+                    UpdateWeightedRiskGridAndQueue(x + 1, y, _weightedRiskGrid[x, y], priorityQueue);
                 }
 
                 // down
                 if (IsValidSquareToVisit(x, y + 1))
                 {
-                    UpdateWeightedRiskGrid(x, y + 1, _weightedRiskGrid[x, y], priorityQueue);
+                    UpdateWeightedRiskGridAndQueue(x, y + 1, _weightedRiskGrid[x, y], priorityQueue);
                 }
 
                 // up
                 if (IsValidSquareToVisit(x, y - 1))
                 {
-                    UpdateWeightedRiskGrid(x, y - 1, _weightedRiskGrid[x, y], priorityQueue);
+                    UpdateWeightedRiskGridAndQueue(x, y - 1, _weightedRiskGrid[x, y], priorityQueue);
                 }
 
                 // left
                 if (IsValidSquareToVisit(x - 1, y))
                 {
-                    UpdateWeightedRiskGrid(x - 1, y, _weightedRiskGrid[x, y], priorityQueue);
+                    UpdateWeightedRiskGridAndQueue(x - 1, y, _weightedRiskGrid[x, y], priorityQueue);
                 }
 
                 _visited.Add((x, y));
             }
         }
 
-        private void UpdateWeightedRiskGrid(int x, int y, int weightedRiskLevel, PriorityQueue<(int, int), int> priorityQueue)
+        private void UpdateWeightedRiskGridAndQueue(int x, int y, int weightedRiskLevel, PriorityQueue<(int, int), int> priorityQueue)
         {
             if (weightedRiskLevel + _caveRiskGrid[x, y] < _weightedRiskGrid[x, y])
             {
@@ -121,8 +123,8 @@
                     var originalX = x < lengthX ? x : x - lengthX * overallX;
                     var originalY = y < lengthY ? y : y - lengthY * overallY;
                     var originalValue = caveRiskGrid[originalX, originalY];
+                    
                     var newValue = 0;
-
                     if (originalValue == 9)
                     {
                         newValue = overallX + overallY;
