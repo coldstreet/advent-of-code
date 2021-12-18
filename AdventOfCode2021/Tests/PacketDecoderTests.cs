@@ -10,7 +10,7 @@ namespace AdventOfCode2021.Tests
         public void TestDecodingPacket()
         {
             // arrange - read grid from file and load into jagged array 
-            var input = File.ReadLines("Tests/PacketDecoderInputV1.txt").ToArray();
+            var input = File.ReadLines("Tests/PacketDecoderInputV1.txt").First();
 
             // act
             var result = Day16_PacketDecoder.DecodeAndSumVersionNumbers(input);
