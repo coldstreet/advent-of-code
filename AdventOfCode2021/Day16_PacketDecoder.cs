@@ -80,7 +80,7 @@ namespace AdventOfCode2021
                 }
                 else
                 {
-                    // type 1
+                    // subpacket type 1
                     var numberOfSubpackets = Convert.ToInt32(packet.Substring(startingIndex + bitIncrement, 11), 2);
                     bitIncrement += 11;
                     var numberResults = new List<long>();
