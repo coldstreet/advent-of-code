@@ -18,9 +18,23 @@ namespace AdventOfCode2021
             return packetInfo.VersionSum;
         }
 
+        public static long DecodeAndSumValues(string input)
+        {
+            // input is hexidecimal - we need it in binary
+            var binaryPacket = string.Join(String.Empty,
+              input.Select(
+                c => Convert.ToString(Convert.ToInt32(c.ToString(), 16), 2).PadLeft(4, '0')
+              )
+            );
+
+            var packetInfo = ProcessPacket(binaryPacket, 0);
+
+            return packetInfo.Value;
+        }
+
         private static PacketInfo ProcessPacket(string packet, int startingIndex)
         {
-            long numberSum = 0;
+            long value = 0;
             var bitIncrement = 0;
             var version = Convert.ToInt32(packet.Substring(startingIndex + bitIncrement, 3), 2);
             long versionSum = version;
@@ -29,12 +43,12 @@ namespace AdventOfCode2021
             bitIncrement += 3;
 
             // Types
-            // 4 => literal
-            // {not 4} => operator
+            // 4 => literal (single number)
+            // {not 4} => see method CalculateValue
             if (type == 4)
             {
                 var pi = GetNumberFromLiteralType(packet, startingIndex + bitIncrement);
-                numberSum += pi.NumberSum;
+                value += pi.Value;
                 bitIncrement += pi.BitsProcessed;
             }
             else
@@ -49,11 +63,12 @@ namespace AdventOfCode2021
                     var lengthOfBits = Convert.ToInt32(packet.Substring(startingIndex + bitIncrement, 15), 2);
                     bitIncrement += 15;
                     var totalBitsProcessed = 0;
+                    var numberResults = new List<long>();
                     while (totalBitsProcessed + 11 <= lengthOfBits)
                     {
                         var subPacketInfo = ProcessPacket(packet, startingIndex + bitIncrement);
                         bitIncrement += subPacketInfo.BitsProcessed;
-                        numberSum += subPacketInfo.NumberSum;
+                        numberResults.Add(subPacketInfo.Value);
                         versionSum += subPacketInfo.VersionSum;
                         totalBitsProcessed += subPacketInfo.BitsProcessed;
                     }
@@ -61,25 +76,28 @@ namespace AdventOfCode2021
                     // adjust for extra bits not used
                     bitIncrement += (lengthOfBits - totalBitsProcessed);
 
-                    // bitIncrement += (packet.Count() - bitIncrement);
+                    value += CalculateValue(type, numberResults.ToArray());
                 }
                 else
                 {
                     // type 1
                     var numberOfSubpackets = Convert.ToInt32(packet.Substring(startingIndex + bitIncrement, 11), 2);
                     bitIncrement += 11;
+                    var numberResults = new List<long>();
                     while (numberOfSubpackets > 0)
                     {
                         var subPacketInfo = ProcessPacket(packet, startingIndex + bitIncrement);
                         bitIncrement += subPacketInfo.BitsProcessed;
-                        numberSum += subPacketInfo.NumberSum;
+                        numberResults.Add(subPacketInfo.Value);
                         versionSum += subPacketInfo.VersionSum;
                         numberOfSubpackets--;
                     }
+
+                    value += CalculateValue(type, numberResults.ToArray());
                 }
             }
 
-            return new PacketInfo(numberSum, versionSum, bitIncrement);
+            return new PacketInfo(value, versionSum, bitIncrement);
         }
 
         private static PacketInfo GetNumberFromLiteralType(string packet, int startingIndex)
@@ -108,19 +126,41 @@ namespace AdventOfCode2021
             var number = Convert.ToInt64(binaryRepresentation.ToString(), 2);
             return new PacketInfo(number, 0, bitIncrement);
         }
+
+        private static long CalculateValue(int type, long[] numberResults) =>
+            type switch
+            {
+                // Types
+                // 4 => literal (single number)
+                // 0 => sum packets
+                // 1 => product
+                // 2 => min
+                // 3 => max
+                // 5 => 1 if first is greater than second; otherwise 0
+                // 6 => 1 if first is less than second; otherwise 0
+                // 7 => 1 if first is equal than second; otherwise 0
+                0 => numberResults.Sum(),
+                1 => numberResults.Aggregate((long)1, (total, next) => total * next),
+                2 => numberResults.Min(),
+                3 => numberResults.Max(),
+                5 => numberResults[0] > numberResults[1] ? 1 : 0,
+                6 => numberResults[0] < numberResults[1] ? 1 : 0,
+                7 => numberResults[0] == numberResults[1] ? 1 : 0,
+                _ => 0
+            };
     }
 
     internal readonly record struct PacketInfo
     {
-        public long NumberSum { get; }
+        public long Value { get; }
 
         public long VersionSum { get; }
 
         public int BitsProcessed { get; }
 
-        public PacketInfo(long numberSum, long versionSum, int bitsProcessed)
+        public PacketInfo(long value, long versionSum, int bitsProcessed)
         {
-            NumberSum = numberSum;
+            Value = value;
             VersionSum = versionSum;
             BitsProcessed = bitsProcessed;
         }
