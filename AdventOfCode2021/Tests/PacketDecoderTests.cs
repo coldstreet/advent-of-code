@@ -16,7 +16,7 @@ namespace AdventOfCode2021.Tests
             var result = Day16_PacketDecoder.DecodeAndSumVersionNumbers(input);
 
             // assert
-            Assert.AreEqual(16, result);
+            Assert.AreEqual(906, result);
         }
     }
 }
