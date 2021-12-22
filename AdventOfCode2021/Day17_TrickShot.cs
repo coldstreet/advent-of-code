@@ -2,7 +2,7 @@
 {
     public static class Day17_TrickShot
     {
-        public static int FindVelocityThatMaximizesHeight(string input)
+        public static (int MaxHeight, int VelocityThatHitsTargetCount) FindVelocityThatMaximizesHeight(string input)
         {
             // input format: target area: x=20..30, y=-10..-5
             var ranges = input
@@ -14,9 +14,9 @@
             var maxIndexY = int.Parse(ranges[1].Split("..")[0]); // assumes negative
             var minIndexY = int.Parse(ranges[1].Split("..")[1]); // assumes negative
 
-            // Likely a much smarter way to do this...
             int maxHeight = 0;
-            for (int y = 1; y <= Math.Abs(maxIndexY); y++)
+            var velocityThatHitsTarget = new HashSet<(int, int)>();
+            for (int y = maxIndexY; y <= Math.Abs(maxIndexY); y++)
             {
                 for (int x = 1; x <= maxIndexX; x++)
                 {
@@ -26,11 +26,15 @@
                         continue;
                     }
 
-                    maxHeight = testHeight > maxHeight ? testHeight : maxHeight; 
+                    maxHeight = testHeight > maxHeight ? testHeight : maxHeight;
+                    if (!velocityThatHitsTarget.Contains((x, y)))
+                    {
+                        velocityThatHitsTarget.Add((x, y));
+                    }
                 }
             }
 
-            return maxHeight;
+            return (maxHeight, velocityThatHitsTarget.Count());
         }
 
         private static int TestLaunch(int velocityX, int velocityY, int minX, int minY, int maxX, int maxY)
