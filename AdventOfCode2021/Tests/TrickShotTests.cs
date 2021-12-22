@@ -3,20 +3,20 @@
 namespace AdventOfCode2021.Tests
 {
     [TestFixture]
-    internal class ChallengeNameTests
+    internal class TrickShotTests
     {
         // Day 99
         [Test]
         public void TestSomeAction()
         {
             // arrange 
-            var input = File.ReadLines("Tests/ChallengeNameInputV1.txt").ToArray();
+            var input = File.ReadLines("Tests/TrickShotInputV1.txt").First();
 
             // act
-            var result = Day99_ChallengeName.SomeAction(input);
+            var result = Day17_TrickShot.FindVelocityThatMaximizesHeight(input);
 
             // assert
-            Assert.AreEqual(45, result);
+            Assert.AreEqual(5253, result);
         }
     }
 }

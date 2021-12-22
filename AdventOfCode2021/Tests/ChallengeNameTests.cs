@@ -3,17 +3,17 @@
 namespace AdventOfCode2021.Tests
 {
     [TestFixture]
-    internal class TrickShotTests
+    internal class ChallengeNameTests
     {
-        // Day 99
+        // Day 99 - This is a template class
         [Test]
         public void TestSomeAction()
         {
             // arrange 
-            var input = File.ReadLines("Tests/TrickShotInputV1.txt").ToArray();
+            var input = File.ReadLines("Tests/ChallengeNameInputV1.txt").ToArray();
 
             // act
-            var result = Day17_TrickShot.SomeAction(input);
+            var result = Day99_ChallengeName.SomeAction(input);
 
             // assert
             Assert.AreEqual(0, result);
