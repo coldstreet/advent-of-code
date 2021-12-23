@@ -47,7 +47,7 @@
             while (true)
             {
                 currentX = currentX + velocityX < currentX ? currentX : currentX + velocityX;
-                currentY += velocityY;  // assumes we always launch upwards
+                currentY += velocityY;   
                 maxHeight = currentY > maxHeight ? currentY : maxHeight;
                 velocityX--;
                 velocityY--;
