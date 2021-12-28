@@ -19,6 +19,7 @@
         public static long SumAllNumbers(string[] input)
         {
             var previousPriorityPairs = new List<PriorityPair>();
+            var previousPairsCount = 0;
             foreach (var line in input)
             {
                 var pairsCount = line.Where(x => x == '[').Count();
@@ -27,7 +28,8 @@
                 var priorityPairs = BuildPriorityPairs(line, pairsCount);
                 if (previousPriorityPairs.Count() > 0)
                 {
-                    Merge(previousPriorityPairs, priorityPairs);
+                    priorityPairs = Merge(previousPriorityPairs, previousPairsCount, priorityPairs, pairsCount);
+                    pairsCount += previousPairsCount + 1;
                 }
 
                 var pairsNestedTooDeep = pairsCount - priorityPairs.OrderBy(p => p.Priority).First().Priority >= 4 ? true : false;
@@ -42,6 +44,7 @@
                 }
                 
                 previousPriorityPairs = priorityPairs;
+                previousPairsCount = pairsCount;
             }
 
             var result = GetMagnitude(previousPriorityPairs);
@@ -211,9 +214,21 @@
             return 0; // todo
         }
 
-        private static void Merge(List<PriorityPair> previousPriorityPairs, List<PriorityPair> priorityPairs)
+        private static List<PriorityPair> Merge(List<PriorityPair> priorityPairs, int priorityPairsCount, List<PriorityPair> newPriorityPairs, int newPairsCount)
         {
-            return; // todo
+            for (int j = 0; j < newPriorityPairs.Count(); j++)
+            {
+                newPriorityPairs[j].Priority += priorityPairsCount;
+            }
+
+            for (int j = 0; j < priorityPairs.Count(); j++)
+            {
+                priorityPairs[j].Priority += newPairsCount;
+            }
+
+            priorityPairs.AddRange(newPriorityPairs);
+
+            return priorityPairs;  
         }
 
         private static List<PriorityPair> BuildPriorityPairs(string line, int pairCount)
