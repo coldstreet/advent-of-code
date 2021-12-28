@@ -1,7 +1,4 @@
-﻿using System.Text;
-using System.Text.RegularExpressions;
-
-namespace AdventOfCode2021
+﻿namespace AdventOfCode2021
 {
     public static class Day18_Snailfish
     {
@@ -21,26 +18,29 @@ namespace AdventOfCode2021
 
         public static long SumAllNumbers(string[] input)
         {
-
-            // e.g., [[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]    
-            // [[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]
             var previousPriorityPairs = new List<PriorityPair>();
             foreach (var line in input)
             {
-                var pairCount = line.Where(x => x == '[').Count();
+                var pairsCount = line.Where(x => x == '[').Count();
 
                 // build priority pairs list based on line
-                var priorityPairs = BuildPriorityPairs(line, pairCount);
+                var priorityPairs = BuildPriorityPairs(line, pairsCount);
                 if (previousPriorityPairs.Count() > 0)
                 {
                     Merge(previousPriorityPairs, priorityPairs);
                 }
 
-                // build new line after explode and split operations and adding to next line
-                Explode(priorityPairs, pairCount);
+                var pairsNestedTooDeep = pairsCount - priorityPairs.OrderBy(p => p.Priority).First().Priority >= 4 ? true : false;
+                var countsAbove9 = priorityPairs.Where(x => x.Left > 9 || x.Right > 9).Count();
+                while (pairsNestedTooDeep || countsAbove9 > 0)
+                {
+                    pairsCount = Explode(priorityPairs, pairsCount);
+                    pairsCount = Split(priorityPairs, pairsCount);
 
-                Split();
-
+                    pairsNestedTooDeep = pairsCount - priorityPairs.OrderBy(p => p.Priority).First().Priority >= 4 ? true : false;
+                    countsAbove9 = priorityPairs.Where(x => x.Left > 9 || x.Right > 9).Count();
+                }
+                
                 previousPriorityPairs = priorityPairs;
             }
 
@@ -50,7 +50,7 @@ namespace AdventOfCode2021
             return result;
         }
 
-        private static void Explode(List<PriorityPair> priorityPairs, int pairsCount)
+        private static int Explode(List<PriorityPair> priorityPairs, int pairsCount)
         {
             var minPriority = priorityPairs.OrderBy(p => p.Priority).First().Priority;
 
@@ -77,12 +77,21 @@ namespace AdventOfCode2021
                                 if (priorityPairs[j].Right == -1 && nextLeftPriority < nextRightPriority)
                                 {
                                     priorityPairs[j].Right = 0;
+                                    priorityPairs[j].Left += left;
                                 }
-                                
-                                priorityPairs[j].Left += left;
+                                else if (priorityPairs[j].Right != -1)
+                                {
+                                    priorityPairs[j].Right += left;
+                                }
+                                else
+                                {
+                                    priorityPairs[j].Left += left;
+                                }
+
                                 break;
                             }
                         }
+                        
 
                         // add right amount to valid pair on right  
                         // look "right" (i.e., down in list)
@@ -93,14 +102,22 @@ namespace AdventOfCode2021
                                 if (priorityPairs[j].Left == -1 && nextRightPriority < nextLeftPriority)
                                 {
                                     priorityPairs[j].Left = 0;
+                                    priorityPairs[j].Right += right;
+                                }
+                                else if (priorityPairs[j].Left != -1)
+                                {
+                                    priorityPairs[j].Left += right;
+                                }
+                                else
+                                {
+                                    priorityPairs[j].Right += right;
                                 }
                                 
-                                priorityPairs[j].Right += right;
                                 break;
                             }
                         }
 
-                        // adjust priority numbers for each pair (+1 per pair)
+                        // adjust priority numbers for each pair (-1 per pair)
                         for (int j = 0; j < priorityPairs.Count(); j++)
                         {
                             priorityPairs[j].Priority--;
@@ -110,19 +127,83 @@ namespace AdventOfCode2021
                         priorityPairs.RemoveAt(i);
 
                         // check for more deep nested pairs to explode
-                        Explode(priorityPairs, pairsCount - 1);
+                        pairsCount--;
+                        Explode(priorityPairs, pairsCount);
 
                         break;
                     }
                 }
             }
 
-            return;
+            return pairsCount;
         }
 
-        private static void Split()
+        private static int Split(List<PriorityPair> priorityPairs, int pairsCount)
         {
-            return; // todo
+            for (int i = 0; i < priorityPairs.Count(); i++)
+            {
+                if (priorityPairs[i].Left > 9 || priorityPairs[i].Right > 9)
+                {
+                    var left = priorityPairs[i].Left;
+                    var right = priorityPairs[i].Right;
+                    var priority = priorityPairs[i].Priority;
+
+                    var nextLeftPriority = i - 1 >= 0 ? priorityPairs[i - 1].Priority : int.MaxValue;
+                    var nextRightPriority = i + 1 < priorityPairs.Count() ? priorityPairs[i + 1].Priority : int.MaxValue;
+
+                    if (left > 9)
+                    {
+                        var newLeft = left/2;
+                        var newRight = (left % 2 == 0) ? left/2 : left/2 + 1;
+
+                        if (right == -1)
+                        {
+                            // replace existing pair in list with new pair with same priority as nextRightPriority (thus increasing the pairs by 1)
+                            priorityPairs[i].Left = newLeft;
+                            priorityPairs[i].Right = newRight;
+                            priorityPairs[i].Priority = nextRightPriority;
+                        }
+                        else
+                        {
+                            priorityPairs[i].Left = -1;
+                            var newPriorityPair = new PriorityPair(newLeft, newRight, priority - 1);
+                            priorityPairs.Insert(i, newPriorityPair);
+                        }
+                    }
+                    else if (right > 9)
+                    {
+                        var newLeft = right/2;
+                        var newRight = (right % 2 == 0) ? right / 2 : right / 2 + 1;
+
+                        if (left == -1)
+                        {
+                            // replace existing pair in list with new pair with same priority as nextLeftPriority (thus increasing the pairs by 1)
+                            priorityPairs[i].Left = newLeft;
+                            priorityPairs[i].Right = newRight;
+                            priorityPairs[i].Priority = nextLeftPriority;
+                        }
+                        else
+                        {
+                            priorityPairs[i].Right = -1;
+                            var newPriorityPair = new PriorityPair(newLeft, newRight, priority - 1);
+                            priorityPairs.Insert(i + 1, newPriorityPair);
+                        }
+                    }
+
+                    // adjust priority numbers for each pair (+1 per pair)
+                    for (int j = 0; j < priorityPairs.Count(); j++)
+                    {
+                        priorityPairs[j].Priority++;
+                    }
+
+                    // check if there are other numbers
+                    pairsCount++;
+                    Split(priorityPairs, pairsCount);
+                    break;
+                }
+            }
+
+            return pairsCount;  
         }
 
         private static int GetMagnitude(List<PriorityPair> priorityPairs)
@@ -149,10 +230,6 @@ namespace AdventOfCode2021
                 if (character == '[')
                 {
                     nestingDepth--;
-                    //if (previousChar == ']')
-                    //{
-                    //    nestingDepth++;
-                    //}
                     continue;
                 }
 
