@@ -33,14 +33,16 @@
                 }
 
                 var pairsNestedTooDeep = pairsCount - priorityPairs.OrderBy(p => p.Priority).First().Priority >= 4 ? true : false;
-                var countsAbove9 = priorityPairs.Where(x => x.Left > 9 || x.Right > 9).Count();
-                while (pairsNestedTooDeep || countsAbove9 > 0)
+                while (pairsNestedTooDeep)
                 {
                     pairsCount = Explode(priorityPairs, pairsCount);
-                    pairsCount = Split(priorityPairs, pairsCount);
-
-                    pairsNestedTooDeep = pairsCount - priorityPairs.OrderBy(p => p.Priority).First().Priority >= 4 ? true : false;
-                    countsAbove9 = priorityPairs.Where(x => x.Left > 9 || x.Right > 9).Count();
+                    pairsNestedTooDeep = false;
+                    var countsAbove9 = priorityPairs.Where(x => x.Left > 9 || x.Right > 9).Count();
+                    if (countsAbove9 > 0)
+                    {
+                        pairsCount = Split(priorityPairs, pairsCount);
+                        pairsNestedTooDeep = pairsCount - priorityPairs.OrderBy(p => p.Priority).First().Priority >= 4 ? true : false;
+                    }
                 }
                 
                 previousPriorityPairs = priorityPairs;
@@ -61,15 +63,13 @@
             {
                 for (int i = 0; i < priorityPairs.Count(); i++)
                 {
-                    // find the deepest pair to "explode"
-                    if (priorityPairs[i].Priority == minPriority)
-                    {
-                        // explode
-                        var left = priorityPairs[i].Left;
-                        var right = priorityPairs[i].Right;
+                    var left = priorityPairs[i].Left;
+                    var right = priorityPairs[i].Right;
 
-                        var nextLeftPriority = i - 1 >= 0 ? priorityPairs[i - 1].Priority : int.MaxValue;
-                        var nextRightPriority = i + 1 < priorityPairs.Count() ? priorityPairs[i + 1].Priority : int.MaxValue;
+                    // find the deepest, leftmost pair to "explode"
+                    if (priorityPairs[i].Priority == minPriority && left != -1 && right != -1)
+                    {
+                        var nextLeftIsParentPair = i - 1 >= 0 && priorityPairs[i - 1].Right == -1 && priorityPairs[i - 1].Priority - 1 == minPriority ? true : false;
 
                         // add left amount to valid pair on left  
                         // look "left" (i.e., up in list)
@@ -77,10 +77,11 @@
                         {
                             if (priorityPairs[j].Left != -1)
                             {
-                                if (priorityPairs[j].Right == -1 && nextLeftPriority < nextRightPriority)
+                                // either a hosting pair or nothing
+                                if (priorityPairs[j].Right == -1 && nextLeftIsParentPair)
                                 {
-                                    priorityPairs[j].Right = 0;
                                     priorityPairs[j].Left += left;
+                                    priorityPairs[j].Right = 0;
                                 }
                                 else if (priorityPairs[j].Right != -1)
                                 {
@@ -94,26 +95,31 @@
                                 break;
                             }
                         }
-                        
+
 
                         // add right amount to valid pair on right  
                         // look "right" (i.e., down in list)
+                        var doNotRemove = false;
                         for (int j = i + 1; j < priorityPairs.Count(); j++)
                         {
                             if (priorityPairs[j].Right != -1)
                             {
-                                if (priorityPairs[j].Left == -1 && nextRightPriority < nextLeftPriority)
+                                if (!nextLeftIsParentPair && priorityPairs[j].Left != -1 && priorityPairs[j].Right != -1)
+                                {
+                                    priorityPairs[i].Left = 0;
+                                    priorityPairs[i].Right = -1;
+                                    priorityPairs[i].Priority++;
+                                    priorityPairs[j].Left += right;
+                                    doNotRemove = true;
+                                }
+                                else if (priorityPairs[j].Left == -1)
                                 {
                                     priorityPairs[j].Left = 0;
                                     priorityPairs[j].Right += right;
                                 }
-                                else if (priorityPairs[j].Left != -1)
+                                else  
                                 {
                                     priorityPairs[j].Left += right;
-                                }
-                                else
-                                {
-                                    priorityPairs[j].Right += right;
                                 }
                                 
                                 break;
@@ -126,12 +132,15 @@
                             priorityPairs[j].Priority--;
                         }
 
-                        // remove the "exploded" pair
-                        priorityPairs.RemoveAt(i);
+                        // Either remove the "exploded" pair or set it to zero
+                        if (!doNotRemove)
+                        {
+                            priorityPairs.RemoveAt(i);
+                        }
 
                         // check for more deep nested pairs to explode
                         pairsCount--;
-                        Explode(priorityPairs, pairsCount);
+                        pairsCount = Explode(priorityPairs, pairsCount);
 
                         break;
                     }
@@ -201,7 +210,7 @@
 
                     // check if there are other numbers
                     pairsCount++;
-                    Split(priorityPairs, pairsCount);
+                    pairsCount = Split(priorityPairs, pairsCount);
                     break;
                 }
             }
