@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode2021
+﻿using System.Diagnostics;
+
+namespace AdventOfCode2021
 {
     public static class Day18_Snailfish
     {
@@ -16,6 +18,8 @@
             }
         }
 
+        private static Stats _stats = new Stats();
+
         public static long SumAllNumbers(string[] input)
         {
             var previousPriorityPairs = new List<PriorityPair>();
@@ -30,6 +34,9 @@
                 {
                     priorityPairs = Merge(previousPriorityPairs, previousPairsCount, priorityPairs, pairsCount);
                     pairsCount += previousPairsCount + 1;
+
+                    Debug.WriteLine("After merge");
+                    PrintPairs(priorityPairs, pairsCount);
                 }
 
                 var pairsNestedTooDeep = pairsCount - priorityPairs.OrderBy(p => p.Priority).First().Priority >= 4 ? true : false;
@@ -69,60 +76,74 @@
                     // find the deepest, leftmost pair to "explode"
                     if (priorityPairs[i].Priority == minPriority && left != -1 && right != -1)
                     {
+                        Debug.WriteLine($"Explode [{left},{right}] with priority {minPriority}");
+                        //PrintPairs(priorityPairs, pairsCount);
                         var nextLeftIsParentPair = i - 1 >= 0 && priorityPairs[i - 1].Right == -1 && priorityPairs[i - 1].Priority - 1 == minPriority ? true : false;
 
                         // add left amount to valid pair on left  
                         // look "left" (i.e., up in list)
-                        for (int j = i - 1; j >= 0; j--)
+                        if (i - 1 >= 0)
                         {
-                            if (priorityPairs[j].Left != -1)
+                            if (priorityPairs[i - 1].Left != -1)
                             {
                                 // either a hosting pair or nothing
-                                if (priorityPairs[j].Right == -1 && nextLeftIsParentPair)
+                                if (priorityPairs[i - 1].Right == -1 && nextLeftIsParentPair)
                                 {
-                                    priorityPairs[j].Left += left;
-                                    priorityPairs[j].Right = 0;
+                                    _stats.AL1++;
+                                    priorityPairs[i - 1].Left += left;
+                                    priorityPairs[i - 1].Right = 0;
                                 }
-                                else if (priorityPairs[j].Right != -1)
+                                else if (priorityPairs[i - 1].Right != -1)
                                 {
-                                    priorityPairs[j].Right += left;
+                                    _stats.AL2++;
+                                    priorityPairs[i - 1].Right += left;
                                 }
                                 else
                                 {
-                                    priorityPairs[j].Left += left;
+                                    _stats.AL3++;
+                                    priorityPairs[i - 1].Left += left;
                                 }
-
-                                break;
+                            }
+                            else // (priorityPairs[i - 1].Right != -1)
+                            {
+                                _stats.BL1++;
+                                priorityPairs[i - 1].Right += left;
                             }
                         }
 
 
                         // add right amount to valid pair on right  
                         // look "right" (i.e., down in list)
-                        var doNotRemove = false;
-                        for (int j = i + 1; j < priorityPairs.Count(); j++)
+                        var removePair = true;
+                        if (i + 1 < priorityPairs.Count())
                         {
-                            if (priorityPairs[j].Right != -1)
+                            if (priorityPairs[i + 1].Right != -1)
                             {
-                                if (!nextLeftIsParentPair && priorityPairs[j].Left != -1 && priorityPairs[j].Right != -1)
+                                if (!nextLeftIsParentPair && priorityPairs[i + 1].Left != -1 && priorityPairs[i + 1].Right != -1)
                                 {
+                                    _stats.AR1++;
                                     priorityPairs[i].Left = 0;
                                     priorityPairs[i].Right = -1;
                                     priorityPairs[i].Priority++;
-                                    priorityPairs[j].Left += right;
-                                    doNotRemove = true;
+                                    priorityPairs[i + 1].Left += right;
+                                    removePair = false;
                                 }
-                                else if (priorityPairs[j].Left == -1)
+                                else if (priorityPairs[i + 1].Left == -1)
                                 {
-                                    priorityPairs[j].Left = 0;
-                                    priorityPairs[j].Right += right;
+                                    _stats.AR2++;
+                                    priorityPairs[i + 1].Left = 0;
+                                    priorityPairs[i + 1].Right += right;
                                 }
                                 else  
                                 {
-                                    priorityPairs[j].Left += right;
+                                    _stats.AR3++;
+                                    priorityPairs[i + 1].Left += right;
                                 }
-                                
-                                break;
+                            }
+                            else // (priorityPairs[i + 1].Left != -1)
+                            {
+                                _stats.BR1++;
+                                priorityPairs[i + 1].Left += right;
                             }
                         }
 
@@ -133,13 +154,14 @@
                         }
 
                         // Either remove the "exploded" pair or set it to zero
-                        if (!doNotRemove)
+                        if (removePair)
                         {
                             priorityPairs.RemoveAt(i);
                         }
 
                         // check for more deep nested pairs to explode
                         pairsCount--;
+                        PrintPairs(priorityPairs, pairsCount);
                         pairsCount = Explode(priorityPairs, pairsCount);
 
                         break;
@@ -160,45 +182,50 @@
                     var right = priorityPairs[i].Right;
                     var priority = priorityPairs[i].Priority;
 
-                    var nextLeftPriority = i - 1 >= 0 ? priorityPairs[i - 1].Priority : int.MaxValue;
-                    var nextRightPriority = i + 1 < priorityPairs.Count() ? priorityPairs[i + 1].Priority : int.MaxValue;
-
                     if (left > 9)
                     {
+                        Debug.WriteLine($"Split left [{left},{right}]");
+
                         var newLeft = left/2;
                         var newRight = (left % 2 == 0) ? left/2 : left/2 + 1;
 
                         if (right == -1)
                         {
-                            // replace existing pair in list with new pair with same priority as nextRightPriority (thus increasing the pairs by 1)
+                            // replace existing pair in list with new pair (thus increasing the pairs by 1)
                             priorityPairs[i].Left = newLeft;
                             priorityPairs[i].Right = newRight;
-                            priorityPairs[i].Priority = nextRightPriority;
-                        }
+                            priorityPairs[i].Priority = priority - 1;
+                            _stats.SL1++;
+        }
                         else
                         {
                             priorityPairs[i].Left = -1;
                             var newPriorityPair = new PriorityPair(newLeft, newRight, priority - 1);
                             priorityPairs.Insert(i, newPriorityPair);
+                            _stats.SL2++;
                         }
                     }
                     else if (right > 9)
                     {
+                        Debug.WriteLine($"Split right [{left},{right}]");
+
                         var newLeft = right/2;
                         var newRight = (right % 2 == 0) ? right / 2 : right / 2 + 1;
 
                         if (left == -1)
                         {
-                            // replace existing pair in list with new pair with same priority as nextLeftPriority (thus increasing the pairs by 1)
+                            // replace existing pair in list with new pair (thus increasing the pairs by 1)
                             priorityPairs[i].Left = newLeft;
                             priorityPairs[i].Right = newRight;
-                            priorityPairs[i].Priority = nextLeftPriority;
+                            priorityPairs[i].Priority = priority - 1;
+                            _stats.SR1++;
                         }
                         else
                         {
                             priorityPairs[i].Right = -1;
                             var newPriorityPair = new PriorityPair(newLeft, newRight, priority - 1);
                             priorityPairs.Insert(i + 1, newPriorityPair);
+                            _stats.SR2++;
                         }
                     }
 
@@ -210,6 +237,8 @@
 
                     // check if there are other numbers
                     pairsCount++;
+                    PrintPairs(priorityPairs, pairsCount);
+                    pairsCount = Explode(priorityPairs, pairsCount);
                     pairsCount = Split(priorityPairs, pairsCount);
                     break;
                 }
@@ -240,12 +269,12 @@
             return priorityPairs;  
         }
 
-        private static List<PriorityPair> BuildPriorityPairs(string line, int pairCount)
+        private static List<PriorityPair> BuildPriorityPairs(string line, int pairsCount)
         {
             var inputChars = line.Replace(",", "").ToCharArray();
 
             var priorityPairs = new List<PriorityPair>();
-            var nestingDepth = pairCount + 1;
+            var nestingDepth = pairsCount + 1;
             for (int i = 0; i < inputChars.Length; i++)
             {
                 char previousChar = i - 1 >= 0 ? inputChars[i - 1] : '\0';
@@ -278,8 +307,47 @@
                 }
             }
 
+            Debug.WriteLine("Built initial list");
+            PrintPairs(priorityPairs, pairsCount);
+
             return priorityPairs;
         }
+
+        private static void PrintPairs(List<PriorityPair> priorityPairs, int pairsCount)
+        {
+            Debug.WriteLine($"Pairs count = {pairsCount}  ------------------------------");
+            for (int i = 0; i < priorityPairs.Count(); i++)
+            {
+                var left = priorityPairs[i].Left;
+                var right = priorityPairs[i].Right;
+                var priority = priorityPairs[i].Priority;
+
+                Debug.WriteLine($"[{left},{right}] {priority}");
+            }
+
+            Debug.WriteLine("");
+        }
+    }
+
+    internal class Stats
+    {
+        internal int Down;
+
+        public int AL1 { get; set; }
+        public int AL2 { get; set; }
+        public int AL3 { get; set; }
+        public int BL1 { get; set; }
+
+        public int AR1 { get; set; }
+        public int AR2 { get; set; }
+        public int AR3 { get; set; }
+        public int BR1 { get; set; }
+
+        public int SL1 { get; set; }
+        public int SL2 { get; set; }
+        public int SR1 { get; set; }
+        public int SR2 { get; set; }
+        public int Up { get; internal set; }
     }
 }
 
