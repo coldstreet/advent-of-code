@@ -60,6 +60,48 @@ namespace AdventOfCode2021
             return result;
         }
 
+        public static long GetLargestMagnitudeFromTwo(string[] input)
+        {
+            var largestMagnitude = int.MinValue;
+
+            foreach (var line in input)
+            {
+                foreach (var otherLine in input)
+                {
+                    if (line == otherLine)
+                    {
+                        continue;
+                    }
+
+                    var pairsCount = line.Where(x => x == '[').Count();
+                    var priorityPairs = BuildPriorityPairs(line, pairsCount);
+                    var otherPairsCount = line.Where(x => x == '[').Count();
+                    var otherPriorityPairs = BuildPriorityPairs(otherLine, otherPairsCount);
+
+                    priorityPairs = Merge(otherPriorityPairs, otherPairsCount, priorityPairs, pairsCount);
+                    pairsCount += otherPairsCount + 1;
+
+                    var pairsNestedTooDeep = pairsCount - priorityPairs.OrderBy(p => p.Priority).First().Priority >= 4 ? true : false;
+                    while (pairsNestedTooDeep)
+                    {
+                        pairsCount = Explode(priorityPairs, pairsCount);
+                        pairsNestedTooDeep = false;
+                        var countsAbove9 = priorityPairs.Where(x => x.Left > 9 || x.Right > 9).Count();
+                        if (countsAbove9 > 0)
+                        {
+                            pairsCount = Split(priorityPairs, pairsCount);
+                            pairsNestedTooDeep = pairsCount - priorityPairs.OrderBy(p => p.Priority).First().Priority >= 4 ? true : false;
+                        }
+                    }
+
+                    var magnitude = GetMagnitude(priorityPairs, pairsCount);
+                    largestMagnitude = magnitude > largestMagnitude ? magnitude : largestMagnitude;
+                }
+            }
+
+            return largestMagnitude;
+        }
+
         private static int Explode(List<PriorityPair> priorityPairs, int pairsCount)
         {
             var minPriority = priorityPairs.OrderBy(p => p.Priority).First().Priority;
@@ -268,7 +310,7 @@ namespace AdventOfCode2021
                     }
                         
                     // look "right" (i.e., down in list)
-                    if (i + 1 < priorityPairs.Count() && priorityPairs[i + 1].Left != -1)
+                    if (i + 1 < priorityPairs.Count())
                     {
                         if (!leftIsHostingPair && priorityPairs[i + 1].Left != -1 && priorityPairs[i + 1].Right != -1 && priorityPairs[i + 1].Priority == priority)
                         {
@@ -297,20 +339,19 @@ namespace AdventOfCode2021
 
                     if (priorityPairs.Count == 0)
                     {
+                        Debug.WriteLine($"Magnitude is {magnitude}");
                         return magnitude;
                     }
 
                     // check for more deep nested pairs to explode
                     pairsCount--;
-                    PrintPairs(priorityPairs, pairsCount);
                     magnitude = GetMagnitude(priorityPairs, pairsCount);
 
                     break;
 
                 }
             }
-
-                    
+       
             return magnitude;   
         }
 
