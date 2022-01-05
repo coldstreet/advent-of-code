@@ -16,7 +16,7 @@ namespace AdventOfCode2021.Tests
             var result = Day18_Snailfish.SumAllNumbers(input);
 
             // assert
-            Assert.AreEqual(4140, result);
+            Assert.AreEqual(3691, result);
         }
     }
 }
