@@ -5,8 +5,9 @@ namespace AdventOfCode2021.Tests
     [TestFixture]
     internal class BeaconScannerTests
     {
-        // Day 99 - This is a template class
+        // Day 19
         [Test]
+        [Ignore("Day 19 is not done")]
         public void TestGettingBeaconCount()
         {
             // arrange 

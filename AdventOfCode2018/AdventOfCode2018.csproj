@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Tests\Day1-v1.txt" />
+    <None Remove="Tests\Day2-v1.txt" />
+    <None Remove="Tests\Day3-v1.txt" />
+    <None Remove="Tests\Day4-v1.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Tests\Day1-v1.txt" />
+    <EmbeddedResource Include="Tests\Day2-v1.txt" />
+    <EmbeddedResource Include="Tests\Day3-v1.txt" />
+    <EmbeddedResource Include="Tests\Day4-v1.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
+  </ItemGroup>
+
+</Project>

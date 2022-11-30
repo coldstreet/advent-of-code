@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Tests\ChecksumInputV1.txt" />
+    <None Remove="Tests\ChecksumInputV2.txt" />
+    <None Remove="Tests\JumpOffsetsInputV1.txt" />
+    <None Remove="Tests\JumpOffsetsInputV2.txt" />
+    <None Remove="Tests\PassphraseInputV1.txt" />
+    <None Remove="Tests\PassphraseInputV2.txt" />
+    <None Remove="Tests\RecursiveCircusInputV1.txt" />
+    <None Remove="Tests\RegisterInputV1.txt" />
+    <None Remove="Tests\StreamProcessorInputV1.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Tests\ChecksumInputV1.txt" />
+    <EmbeddedResource Include="Tests\ChecksumInputV2.txt" />
+    <EmbeddedResource Include="Tests\JumpOffsetsInputV1.txt" />
+    <EmbeddedResource Include="Tests\JumpOffsetsInputV2.txt" />
+    <EmbeddedResource Include="Tests\PassphraseInputV1.txt" />
+    <EmbeddedResource Include="Tests\PassphraseInputV2.txt" />
+    <EmbeddedResource Include="Tests\RecursiveCircusInputV1.txt" />
+    <EmbeddedResource Include="Tests\RegisterInputV1.txt" />
+    <EmbeddedResource Include="Tests\StreamProcessorInputV1.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
+  </ItemGroup>
+
+</Project>
