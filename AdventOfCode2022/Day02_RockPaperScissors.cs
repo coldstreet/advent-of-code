@@ -27,11 +27,6 @@
                 {(9,2), (6,6), (3,7)}
             };
 
-            // P2
-            // 0 (rock) means lose
-            // 1 (paper) means draw
-            // 2 (scissors) means win
-
             return plays.Sum(play => scoringRules[play.Item1, play.Item2].Item2);
         }
 
