@@ -9,7 +9,7 @@ namespace AdventOfCode2022.Tests
         public void TestSomeAction()
         {
             // arrange 
-            var input = File.ReadLines("Tests/ChallengeNameInputV1.txt").ToArray();
+            var input = File.ReadLines("Tests/Day99_ChallengeNameTests.txt").ToArray();
 
             // act
             var result = Day99_ChallengeName.SomeAction(input);
