@@ -17,5 +17,18 @@ namespace AdventOfCode2022.Tests
             // assert
             Assert.AreEqual("RTGWZTHLD", result);
         }
+
+        [Test]
+        public void TestMoveCratesManyAtATime()
+        {
+            // arrange 
+            var input = File.ReadLines("Tests/Day05_SupplyStacksTests.txt").ToArray();
+
+            // act
+            var result = Day05_SupplyStacks.MoveCratesManyAtATime(input);
+
+            // assert
+            Assert.AreEqual("RTGWZTHLD", result);
+        }
     }
 }
