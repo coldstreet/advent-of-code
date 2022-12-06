@@ -28,7 +28,7 @@ namespace AdventOfCode2022.Tests
             var result = Day05_SupplyStacks.MoveCratesManyAtATime(input);
 
             // assert
-            Assert.AreEqual("RTGWZTHLD", result);
+            Assert.AreEqual("STHGRZZFR", result);
         }
     }
 }
