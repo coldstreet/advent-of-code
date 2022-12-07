@@ -22,6 +22,9 @@
     <None Update="Tests\Day05_SupplyStacksTests.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Tests\Day06_TuningTroubleTests.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Tests\Day99_ChallengeNameTests.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
