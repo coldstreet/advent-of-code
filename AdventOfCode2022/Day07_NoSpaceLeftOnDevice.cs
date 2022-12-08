@@ -77,26 +77,26 @@
 
                 if (item.StartsWith("dir"))
                 {
-                    currentDirNode.Nodes.Add(new Node(item.Split(' ')[1], currentDirNode));
+                    currentDirNode!.Nodes.Add(new Node(item.Split(' ')[1], currentDirNode));
                     continue;
                 }
 
                 if (!item.StartsWith("$ cd ..") && item.StartsWith("$ cd "))
                 {
                     var folder = item.Substring(5);
-                    currentDirNode = currentDirNode.Nodes.Where(x => x.Name == folder).First();
+                    currentDirNode = currentDirNode!.Nodes.First(x => x.Name == folder);
                     continue;
                 }
 
                 if (item.StartsWith("$ cd .."))
                 {
-                    currentDirNode = currentDirNode.ParentNode;
+                    currentDirNode = currentDirNode!.ParentNode;
                     continue;
                 }
 
                 var fileInfo = item.Split(' ');
                 int size = int.Parse(fileInfo[0]);
-                currentDirNode.Files.Add((fileInfo[1], size));
+                currentDirNode!.Files.Add((fileInfo[1], size));
             }
 
             return rootNode;
