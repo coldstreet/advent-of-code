@@ -4,14 +4,62 @@
     {
         public static long FindSumOfDirsLessThanSpecifiedSize(string[] input)
         {
-            var rootNode = ParseFileStucture(input);
+            var rootNode = ParseFileStructure(input);
 
             rootNode.Size = CalculateDirSize(rootNode);
 
             return FindSumOfDirsWithSizeLessThanEqual(rootNode, 100000);
         }
 
-        private static Node ParseFileStucture(string[] input)
+        public static long FindSizeOfDirToDelete(string[] input)
+        {
+            var rootNode = ParseFileStructure(input);
+
+            rootNode.Size = CalculateDirSize(rootNode);
+
+            var unusedSize = 70000000 - rootNode.Size;
+            var extraSizeNeeded = 30000000 - unusedSize;
+
+            return FindFindSmallestSizeThatIsGreaterOrEqual(rootNode, extraSizeNeeded, rootNode.Size);
+        }
+
+        private static int CalculateDirSize(Node rootNode)
+        {
+            int size = rootNode.Files.Sum(file => file.Item2);
+            size += rootNode.Nodes.Sum(node => CalculateDirSize(node));
+
+            rootNode.Size = size;
+            return size;
+        }
+
+        private static int FindSumOfDirsWithSizeLessThanEqual(Node rootNode, int limit)
+        {
+            int sum = rootNode.Size <= limit ? rootNode.Size : 0;
+
+            foreach (var node in rootNode.Nodes)
+            {
+                sum += FindSumOfDirsWithSizeLessThanEqual(node, limit);
+            }
+
+            return sum;
+        }
+
+        private static int FindFindSmallestSizeThatIsGreaterOrEqual(Node rootNode, int limit, int minSize)
+        {
+            if (rootNode.Size < minSize && rootNode.Size >= limit)
+            {
+                minSize = rootNode.Size;
+            }
+
+            foreach (var node in rootNode.Nodes)
+            {
+                minSize = FindFindSmallestSizeThatIsGreaterOrEqual(node, limit, minSize);
+            }
+
+            return minSize;
+        }
+
+        private static Node ParseFileStructure(string[] input)
         {
             var rootNode = new Node("/", null);
             var currentDirNode = rootNode;
@@ -52,27 +100,6 @@
             }
 
             return rootNode;
-        }
-
-        private static int CalculateDirSize(Node rootNode)
-        {
-            int size = rootNode.Files.Sum(file => file.Item2);
-            size += rootNode.Nodes.Sum(node => CalculateDirSize(node));
-
-            rootNode.Size = size;
-            return size;
-        }
-
-        private static int FindSumOfDirsWithSizeLessThanEqual(Node rootNode, int limit)
-        {
-            int sum = rootNode.Size <= limit ? rootNode.Size : 0;
-
-            foreach (var node in rootNode.Nodes)
-            {
-                sum += FindSumOfDirsWithSizeLessThanEqual(node, limit);
-            }
-
-            return sum;
         }
     }
 
