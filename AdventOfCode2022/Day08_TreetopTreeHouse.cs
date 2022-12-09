@@ -93,7 +93,7 @@ namespace AdventOfCode2022
                 if (i - 1 == 0)
                 {
                     scenicScore = 1;
-                    if (home > b)
+                    if (home >= b)
                     {
                         continue;
                     }
@@ -110,7 +110,7 @@ namespace AdventOfCode2022
                     break;
                 }
 
-                if (home <= b)
+                if (home < b)
                 {
                     break;
                 }
