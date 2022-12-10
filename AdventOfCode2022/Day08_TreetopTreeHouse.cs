@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Security.Cryptography.X509Certificates;
-
-namespace AdventOfCode2022
+﻿namespace AdventOfCode2022
 {
     public static class Day08_TreetopTreeHouse
     {
@@ -57,25 +54,25 @@ namespace AdventOfCode2022
                 }
             }
 
-            int maxScenicView = 0;
+            var maxScenicView = 0;
             foreach (var row in treeGrid)
             {
-                int maxForRow = row.Max(x => x.ScenicScore);
+                var maxForRow = row.Max(x => x.ScenicScore);
                 maxScenicView = maxForRow > maxScenicView ? maxForRow : maxScenicView;
             }
 
             return maxScenicView;
         }
 
-        private static void FactorInScore(Tree[][] treeGrid, int i, int j, int scenicScore)
+        private static void FactorInScore(Tree[][] treeGrid, int row, int column, int scenicScore)
         {
-            if (treeGrid[i][j].ScenicScore == 0)
+            if (treeGrid[row][column].ScenicScore == 0)
             {
-                treeGrid[i][j].ScenicScore = scenicScore;
+                treeGrid[row][column].ScenicScore = scenicScore;
             }
             else
             {
-                treeGrid[i][j].ScenicScore *= scenicScore;
+                treeGrid[row][column].ScenicScore *= scenicScore;
             }
         }
 
@@ -93,7 +90,7 @@ namespace AdventOfCode2022
                 if (i - 1 == 0)
                 {
                     scenicScore = 1;
-                    if (home >= b)
+                    if (home > b)
                     {
                         continue;
                     }

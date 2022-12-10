@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace AdventOfCode2022;
+﻿namespace AdventOfCode2022;
 
 public static class Day03_RucksackReorganization
 {
