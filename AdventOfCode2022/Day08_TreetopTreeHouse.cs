@@ -81,16 +81,14 @@
             var scenicScore = 0;
             for (int i = 1; i < treeGrid.Length; i++)
             {
-                // [home][...][a][b]
-                var a = treeGrid[i - 1].Height;
-                var b = treeGrid[i].Height;
+                var nextTreeAway = treeGrid[i].Height;
                 var home = treeGrid[0].Height;
 
                 // if first adjacent 
                 if (i - 1 == 0)
                 {
                     scenicScore = 1;
-                    if (home > b)
+                    if (home > nextTreeAway)
                     {
                         continue;
                     }
@@ -98,16 +96,8 @@
                     break;
                 }
 
-                if (a <= b)
-                {
-                    scenicScore++;
-                }
-                else
-                {
-                    break;
-                }
-
-                if (home < b)
+                scenicScore++;
+                if (home <= nextTreeAway)
                 {
                     break;
                 }
