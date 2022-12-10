@@ -28,7 +28,7 @@ namespace AdventOfCode2022.Tests
             var result = Day08_TreetopTreeHouse.FindMaxScenicView(input);
 
             // assert
-            Assert.AreEqual(1688, result);
+            Assert.AreEqual(410400, result);
         }
     }
 }

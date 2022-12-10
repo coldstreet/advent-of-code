@@ -15,7 +15,7 @@ namespace AdventOfCode2022.Tests
             var result = Day10_CathodeRayTube.SumSignalStrengthAtVariousCycles(input);
 
             // assert
-            Assert.AreEqual(0, result);
+            Assert.AreEqual(14760, result);
         }
 
         // yes, this is a fake test
