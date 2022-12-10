@@ -6,7 +6,7 @@ namespace AdventOfCode2022.Tests
     internal class Day10_CathodeRayTubeTests
     {
         [Test]
-        public void TestSomeAction()
+        public void TestSumSignalStrengthAtVariousCycles()
         {
             // arrange 
             var input = File.ReadLines("Tests/Day10_CathodeRayTubeTests.txt").ToArray();
@@ -16,6 +16,20 @@ namespace AdventOfCode2022.Tests
 
             // assert
             Assert.AreEqual(0, result);
+        }
+
+        // yes, this is a fake test
+        [Test]
+        public void TestDrawMessageOnCrt()
+        {
+            // arrange 
+            var input = File.ReadLines("Tests/Day10_CathodeRayTubeTests.txt").ToArray();
+
+            // act
+            var result = Day10_CathodeRayTube.DrawMessageOnCrt(input);
+
+            // assert
+            Assert.AreEqual("EFGERURE", result);
         }
     }
 }
