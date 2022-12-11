@@ -103,7 +103,7 @@ namespace AdventOfCode2022
             
             DrawCrt(crt);
 
-            return "EFGERURE"; // hard coding result based on what I visually see in drawn CRT (i.e., debug write lines)
+            return "EFGERURE"; // hard coding result based on what I see in drawn CRT (i.e., debug write lines)
 
         }
 
