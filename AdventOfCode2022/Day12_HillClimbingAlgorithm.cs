@@ -5,11 +5,45 @@ namespace AdventOfCode2022
     // based on Dijkstra's algorithm (https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
     public static class Day12_HillClimbingAlgorithm
     {
-        public static long FindFewestStepsToHighSpot(string[] input)
+        public static long FindFewestStepsToHighSpotFromStart(string[] input)
         {
             // parse input
             var (grid, startingCoordinates, endingCoordinates) = ParseGridAndSetStartAndEnd(input);
 
+            return FindLeastPathValue(grid, startingCoordinates, endingCoordinates);
+        }
+
+        public static long FindMinPathToHighSpot(string[] input)
+        {
+            // parse input
+            var (grid, startingCoordinates, endingCoordinates) = ParseGridAndSetStartAndEnd(input);
+
+            // find all possible starting coordinates
+            var allStartingCoordinates = new List<(int, int)>();
+            var rowCount = grid.GetLength(1);
+            var columnCount = grid.GetLength(0);
+            for (var i = 0; i < columnCount; i++)
+            {
+                for (var j = 0; j < rowCount; j++)
+                {
+                    if (grid[i, j] == (int)Convert.ToChar('a'))
+                    {
+                        allStartingCoordinates.Add((i, j));
+                    }
+                }
+            }
+
+            var results = new List<int>();
+            foreach (var start in allStartingCoordinates)
+            {
+                results.Add(FindLeastPathValue(grid, (start.Item1, start.Item2), endingCoordinates));
+            }
+
+            return results.Min();
+        }
+
+        private static int FindLeastPathValue(int[,] grid, (int, int) startingCoordinates, (int, int) endingCoordinates)
+        {
             // initialize weightedRiskGrid
             var rowCount = grid.GetLength(1);
             var columnCount = grid.GetLength(0);
@@ -28,6 +62,11 @@ namespace AdventOfCode2022
             HashSet<(int, int)> visited = new HashSet<(int, int)>();
             while (true)
             {
+                if (priorityQueue.Count == 0)
+                {
+                    return int.MaxValue;
+                }
+
                 (int i, int j) = priorityQueue.Dequeue();
                 if (grid[i, j] == (int)Convert.ToChar('z') + 1)
                 {
@@ -63,7 +102,8 @@ namespace AdventOfCode2022
                 visited.Add((i, j));
             }
 
-            return unvisitedGrid[endingCoordinates.Item1,endingCoordinates.Item2];
+            var leastPathValue = unvisitedGrid[endingCoordinates.Item1, endingCoordinates.Item2];
+            return leastPathValue;
         }
 
         private static (int[,], (int, int), (int, int)) ParseGridAndSetStartAndEnd(string[] input)
