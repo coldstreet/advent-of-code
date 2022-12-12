@@ -1,5 +1,6 @@
 ﻿namespace AdventOfCode2021
 {
+    // based on Dijkstra's algorithm
     public class Day15_Chiton
     {
         // todo - this can be a static class as these variables don't need to be global

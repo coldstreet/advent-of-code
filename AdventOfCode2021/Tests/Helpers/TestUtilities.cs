@@ -1,9 +1,9 @@
 ﻿namespace AdventOfCode2021.Tests.Helpers
 {
-    internal static class TestUtilities
+    public static class TestUtilities
     {
         // From Jon Skeet on stack overflow 
-        internal static T[,] CreateRectangularArray<T>(IList<T[]> arrays)
+        public static T[,] CreateRectangularArray<T>(IList<T[]> arrays)
         {
             // TODO: Validation and special-casing for arrays.Count == 0
             int minorLength = arrays[0].Length;

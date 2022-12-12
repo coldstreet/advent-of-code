@@ -2,19 +2,25 @@
 {
     public static class Day09_RopeBridge
     {
-        public static long CountTailVisitLocations(string[] input, int knots = 2)
+        public static long CountTailVisitLocations(string[] input, int knotsInRope = 2, int tailToTrack = 1)
         {
             var instructions = ParseInput(input);
 
             var tailMoves = new Dictionary<(int, int), int>();
-            var headCoordinates = (0, 0);
-            var tailCoordinates = (0, 0);
+            var coordinatesPerKnot = new List<(int, int)>();
+            var knotsInPlay = 2;
+            while (knotsInRope > 0)
+            {
+                coordinatesPerKnot.Add((0,0));
+                knotsInRope--;
+            }
+
             foreach (var instruction in instructions)
             {
                 var direction = instruction.Item1;
                 var steps = instruction.Item2;
 
-                (headCoordinates, tailCoordinates) = MoveHeadAndTailOne(direction, steps, tailMoves, headCoordinates, tailCoordinates);
+                knotsInPlay = MoveHeadAndTailPerDirectionAndSteps(direction, steps, tailToTrack, knotsInPlay, tailMoves, coordinatesPerKnot);
             }
 
             return tailMoves.Count();
@@ -32,71 +38,143 @@
             return instructions;
         }
 
-        private static ((int, int), (int, int)) MoveHeadAndTailOne(char direction, int steps,
-            Dictionary<(int, int), int> tailMoves, (int, int) headCoordinates, (int, int) tailCoordinates)
+        private static int MoveHeadAndTailPerDirectionAndSteps(
+            char direction, 
+            int steps,
+            int tailToTrack,
+            int knotsInPlay,
+            Dictionary<(int, int), int> tailMoves, 
+            List<(int, int)> coordinatesPerKnot)
         {
             (int, int) newHeadCoordinates = (0, 0);
             switch (direction)
             {
                 case 'R':
-                    for (int i = headCoordinates.Item1 + 1; i <= headCoordinates.Item1 + steps; i++)
+                    for (var knotIndex = 0; knotIndex < knotsInPlay - 1; knotIndex++)
                     {
-                        newHeadCoordinates = (i, headCoordinates.Item2);
-                        if (!IsDirectDiagonal(newHeadCoordinates, tailCoordinates) &&
-                            !IsHeadAndTailOnSame(newHeadCoordinates, tailCoordinates) &&
-                            newHeadCoordinates.Item1 != tailCoordinates.Item1)
+                        var headKnotCoordinates = coordinatesPerKnot[knotIndex];
+                        var tailKnotCoordinates = coordinatesPerKnot[knotIndex + 1];
+                        for (var i = headKnotCoordinates.Item1 + 1; i <= headKnotCoordinates.Item1 + steps; i++)
                         {
-                            tailCoordinates = (i - 1, newHeadCoordinates.Item2);
-                            UpdateTailLocation(tailMoves, tailCoordinates);
+                            //for (int headKnotIndex = 1; headKnotIndex < knotsInPlay; headKnotIndex++)
+                            //{
+                            //    knotsInPlay = knotsInPlay < knotsInRope ? knotsInPlay + 1 : knotsInRope;
+                            //}
+                            newHeadCoordinates = (i, headKnotCoordinates.Item2);
+                            if (CanTailMove(tailKnotCoordinates, newHeadCoordinates, true))
+                            {
+                                coordinatesPerKnot[knotIndex + 1] = (i - 1, newHeadCoordinates.Item2);
+                                if (knotIndex + 1 == tailToTrack)
+                                {
+                                    UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
+                                    //if (knotsInPlay < knotsInRope)
+                                    //{
+                                    //    knotsInPlay++;
+                                    //}
+                                }
+                            }
+
+                            coordinatesPerKnot[knotIndex] = newHeadCoordinates;
                         }
                     }
 
                     break;
                 case 'L':
-                    for (int i = headCoordinates.Item1 - 1; i >= headCoordinates.Item1 - steps; i--)
+                    for (var knotIndex = 0; knotIndex < coordinatesPerKnot.Count - 1; knotIndex++)
                     {
-                        newHeadCoordinates = (i, headCoordinates.Item2);
-                        if (!IsDirectDiagonal(newHeadCoordinates, tailCoordinates) &&
-                            !IsHeadAndTailOnSame(newHeadCoordinates, tailCoordinates) &&
-                            newHeadCoordinates.Item1 != tailCoordinates.Item1)
+                        var headKnotCoordinates = coordinatesPerKnot[knotIndex];
+                        var tailKnotCoordinates = coordinatesPerKnot[knotIndex + 1];
+                        for (var i = headKnotCoordinates.Item1 - 1; i >= headKnotCoordinates.Item1 - steps; i--)
                         {
-                            tailCoordinates = (i + 1, newHeadCoordinates.Item2);
-                            UpdateTailLocation(tailMoves, tailCoordinates);
+                            newHeadCoordinates = (i, headKnotCoordinates.Item2);
+                            if (CanTailMove(tailKnotCoordinates, newHeadCoordinates, true))
+                            {
+                                coordinatesPerKnot[knotIndex + 1] = (i + 1, newHeadCoordinates.Item2);
+                                if (knotIndex + 1 == tailToTrack)
+                                {
+                                    UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
+                                }
+                            }
+                            //else
+                            //{
+                            //    break;
+                            //}
+                            coordinatesPerKnot[knotIndex] = newHeadCoordinates;
                         }
+
+                        
                     }
 
                     break;
                 case 'U':
-                    for (int j = headCoordinates.Item2 + 1; j <= headCoordinates.Item2 + steps; j++)
+                    for (var knotIndex = 0; knotIndex < coordinatesPerKnot.Count - 1; knotIndex++)
                     {
-                        newHeadCoordinates = (headCoordinates.Item1, j);
-                        if (!IsDirectDiagonal(newHeadCoordinates, tailCoordinates) &&
-                            !IsHeadAndTailOnSame(newHeadCoordinates, tailCoordinates) &&
-                            newHeadCoordinates.Item2 != tailCoordinates.Item2)
+                        var headKnotCoordinates = coordinatesPerKnot[knotIndex];
+                        var tailKnotCoordinates = coordinatesPerKnot[knotIndex + 1];
+                        for (var j = headKnotCoordinates.Item2 + 1; j <= headKnotCoordinates.Item2 + steps; j++)
                         {
-                            tailCoordinates = (newHeadCoordinates.Item1, j - 1);
-                            UpdateTailLocation(tailMoves, tailCoordinates);
+                            newHeadCoordinates = (headKnotCoordinates.Item1, j);
+                            if (CanTailMove(tailKnotCoordinates, newHeadCoordinates, false))
+                            {
+                                coordinatesPerKnot[knotIndex + 1] = (newHeadCoordinates.Item1, j - 1);
+                                if (knotIndex + 1 == tailToTrack)
+                                {
+                                    UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
+                                }
+                            }
+                            //else
+                            //{
+                            //    break;
+                            //}
+                            coordinatesPerKnot[knotIndex] = newHeadCoordinates;
                         }
+
+                        
                     }
 
                     break;
                 default:
-                    for (int j = headCoordinates.Item2 - 1; j >= headCoordinates.Item2 - steps; j--)
+                    for (var knotIndex = 0; knotIndex < coordinatesPerKnot.Count - 1; knotIndex++)
                     {
-                        newHeadCoordinates = (headCoordinates.Item1, j);
-                        if (!IsDirectDiagonal(newHeadCoordinates, tailCoordinates) &&
-                            !IsHeadAndTailOnSame(newHeadCoordinates, tailCoordinates) &&
-                            newHeadCoordinates.Item2 != tailCoordinates.Item2)
+                        var headKnotCoordinates = coordinatesPerKnot[knotIndex];
+                        var tailKnotCoordinates = coordinatesPerKnot[knotIndex + 1];
+                        for (var j = headKnotCoordinates.Item2 - 1; j >= headKnotCoordinates.Item2 - steps; j--)
                         {
-                            tailCoordinates = (newHeadCoordinates.Item1, j + 1);
-                            UpdateTailLocation(tailMoves, tailCoordinates);
+                            newHeadCoordinates = (headKnotCoordinates.Item1, j);
+                            if (CanTailMove(tailKnotCoordinates, newHeadCoordinates, false))
+                            {
+                                coordinatesPerKnot[knotIndex + 1] = (newHeadCoordinates.Item1, j + 1);
+                                if (knotIndex + 1 == tailToTrack)
+                                {
+                                    UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
+                                }
+                            }
+                            //else
+                            //{
+                            //    break;
+                            //}
+                            coordinatesPerKnot[knotIndex] = newHeadCoordinates;
                         }
+
+                        
                     }
 
                     break;
             }
 
-            return (newHeadCoordinates, tailCoordinates);
+            return knotsInPlay;
+        }
+
+        private static bool CanTailMove((int, int) tailCoordinates, (int, int) newHeadCoordinates, bool horizontalMove = true)
+        {
+            var allowed = horizontalMove 
+                ? newHeadCoordinates.Item1 != tailCoordinates.Item1 
+                : newHeadCoordinates.Item2 != tailCoordinates.Item2;
+
+
+            return !IsDirectDiagonal(newHeadCoordinates, tailCoordinates) &&
+                   !IsHeadAndTailOnSame(newHeadCoordinates, tailCoordinates) &&
+                   allowed;
         }
 
         private static bool IsDirectDiagonal((int, int) newHeadCoordinates, (int, int) tailCoordinates)
