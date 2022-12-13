@@ -39,76 +39,87 @@
             List<(int, int)> coordinatesPerKnot)
         {
             var knotIndex = 0;
+            var head = coordinatesPerKnot[knotIndex];
+            var tail = coordinatesPerKnot[knotIndex + 1];
             switch (direction)
             {
                 case 'R':
-                    var head = coordinatesPerKnot[knotIndex];
-                    var tail = coordinatesPerKnot[knotIndex + 1];
-                    for (var i = head.Item1 + 1; i <= head.Item1 + steps; i++)
-                    {
-                        var newHead = (i, head.Item2);
-                        if (CanTailMove(tail, newHead, true))
-                        {
-                            coordinatesPerKnot[knotIndex + 1] = (i - 1, newHead.Item2);
-                            UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
-                        }
-
-                        coordinatesPerKnot[knotIndex] = newHead;
-                    }
-
-
+                    MoveHeadTailRight(steps, tailMoves, coordinatesPerKnot, head, tail, knotIndex);
                     break;
                 case 'L':
-                    head = coordinatesPerKnot[knotIndex];
-                    tail = coordinatesPerKnot[knotIndex + 1];
-                    for (var i = head.Item1 - 1; i >= head.Item1 - steps; i--)
-                    {
-                        var newHead = (i, head.Item2);
-                        if (CanTailMove(tail, newHead, true))
-                        {
-                            coordinatesPerKnot[knotIndex + 1] = (i + 1, newHead.Item2);
-                            UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
-                        }
-
-                        coordinatesPerKnot[knotIndex] = newHead;
-                    }
-
+                    MoveHeadTailLeft(steps, tailMoves, coordinatesPerKnot, head, tail, knotIndex);
                     break;
                 case 'U':
-                    head = coordinatesPerKnot[knotIndex];
-                    tail = coordinatesPerKnot[knotIndex + 1];
-                    for (var j = head.Item2 + 1; j <= head.Item2 + steps; j++)
-                    {
-                        var newHead = (head.Item1, j);
-                        if (CanTailMove(tail, newHead, false))
-                        {
-                            coordinatesPerKnot[knotIndex + 1] = (newHead.Item1, j - 1);
-                            UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
-                        }
-
-                        coordinatesPerKnot[knotIndex] = newHead;
-                    }
-
+                    MoveHeadTailUp(steps, tailMoves, coordinatesPerKnot, head, tail, knotIndex);
                     break;
                 default:
-                    head = coordinatesPerKnot[knotIndex];
-                    tail = coordinatesPerKnot[knotIndex + 1];
-                    for (var j = head.Item2 - 1; j >= head.Item2 - steps; j--)
-                    {
-                        var newHead = (head.Item1, j);
-                        if (CanTailMove(tail, newHead, false))
-                        {
-                            coordinatesPerKnot[knotIndex + 1] = (newHead.Item1, j + 1);
-                            UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
-                        }
-
-                        coordinatesPerKnot[knotIndex] = newHead;
-                    }
-                    
+                    MoveHeadTailDown(steps, tailMoves, coordinatesPerKnot, head, tail, knotIndex);
                     break;
             }
+        }
 
-            return;
+        private static void MoveHeadTailDown(int steps, Dictionary<(int, int), int> tailMoves, List<(int, int)> coordinatesPerKnot, (int, int) head,
+            (int, int) tail, int knotIndex)
+        {
+            for (var j = head.Item2 - 1; j >= head.Item2 - steps; j--)
+            {
+                var newHead = (head.Item1, j);
+                if (CanTailMove(tail, newHead, false))
+                {
+                    coordinatesPerKnot[knotIndex + 1] = (newHead.Item1, j + 1);
+                    UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
+                }
+
+                coordinatesPerKnot[knotIndex] = newHead;
+            }
+        }
+
+        private static void MoveHeadTailUp(int steps, Dictionary<(int, int), int> tailMoves, List<(int, int)> coordinatesPerKnot, (int, int) head,
+            (int, int) tail, int knotIndex)
+        {
+            for (var j = head.Item2 + 1; j <= head.Item2 + steps; j++)
+            {
+                var newHead = (head.Item1, j);
+                if (CanTailMove(tail, newHead, false))
+                {
+                    coordinatesPerKnot[knotIndex + 1] = (newHead.Item1, j - 1);
+                    UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
+                }
+
+                coordinatesPerKnot[knotIndex] = newHead;
+            }
+        }
+
+        private static void MoveHeadTailLeft(int steps, Dictionary<(int, int), int> tailMoves, List<(int, int)> coordinatesPerKnot, (int, int) head,
+            (int, int) tail, int knotIndex)
+        {
+            for (var i = head.Item1 - 1; i >= head.Item1 - steps; i--)
+            {
+                var newHead = (i, head.Item2);
+                if (CanTailMove(tail, newHead, true))
+                {
+                    coordinatesPerKnot[knotIndex + 1] = (i + 1, newHead.Item2);
+                    UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
+                }
+
+                coordinatesPerKnot[knotIndex] = newHead;
+            }
+        }
+
+        private static void MoveHeadTailRight(int steps, Dictionary<(int, int), int> tailMoves, List<(int, int)> coordinatesPerKnot, (int, int) head,
+            (int, int) tail, int knotIndex)
+        {
+            for (var i = head.Item1 + 1; i <= head.Item1 + steps; i++)
+            {
+                var newHead = (i, head.Item2);
+                if (CanTailMove(tail, newHead, true))
+                {
+                    coordinatesPerKnot[knotIndex + 1] = (i - 1, newHead.Item2);
+                    UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
+                }
+
+                coordinatesPerKnot[knotIndex] = newHead;
+            }
         }
 
         private static bool CanTailMove((int, int) tailCoordinates, (int, int) newHeadCoordinates, bool horizontalMove = true)
