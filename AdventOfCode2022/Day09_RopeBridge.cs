@@ -39,71 +39,70 @@
             List<(int, int)> coordinatesPerKnot)
         {
             var knotIndex = 0;
-            (int, int) newHeadCoordinates = (0, 0);
             switch (direction)
             {
                 case 'R':
-                    var headKnotCoordinates = coordinatesPerKnot[knotIndex];
-                    var tailKnotCoordinates = coordinatesPerKnot[knotIndex + 1];
-                    for (var i = headKnotCoordinates.Item1 + 1; i <= headKnotCoordinates.Item1 + steps; i++)
+                    var head = coordinatesPerKnot[knotIndex];
+                    var tail = coordinatesPerKnot[knotIndex + 1];
+                    for (var i = head.Item1 + 1; i <= head.Item1 + steps; i++)
                     {
-                        newHeadCoordinates = (i, headKnotCoordinates.Item2);
-                        if (CanTailMove(tailKnotCoordinates, newHeadCoordinates, true))
+                        var newHead = (i, head.Item2);
+                        if (CanTailMove(tail, newHead, true))
                         {
-                            coordinatesPerKnot[knotIndex + 1] = (i - 1, newHeadCoordinates.Item2);
+                            coordinatesPerKnot[knotIndex + 1] = (i - 1, newHead.Item2);
                             UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
                         }
 
-                        coordinatesPerKnot[knotIndex] = newHeadCoordinates;
+                        coordinatesPerKnot[knotIndex] = newHead;
                     }
 
 
                     break;
                 case 'L':
-                    headKnotCoordinates = coordinatesPerKnot[knotIndex];
-                    tailKnotCoordinates = coordinatesPerKnot[knotIndex + 1];
-                    for (var i = headKnotCoordinates.Item1 - 1; i >= headKnotCoordinates.Item1 - steps; i--)
+                    head = coordinatesPerKnot[knotIndex];
+                    tail = coordinatesPerKnot[knotIndex + 1];
+                    for (var i = head.Item1 - 1; i >= head.Item1 - steps; i--)
                     {
-                        newHeadCoordinates = (i, headKnotCoordinates.Item2);
-                        if (CanTailMove(tailKnotCoordinates, newHeadCoordinates, true))
+                        var newHead = (i, head.Item2);
+                        if (CanTailMove(tail, newHead, true))
                         {
-                            coordinatesPerKnot[knotIndex + 1] = (i + 1, newHeadCoordinates.Item2);
+                            coordinatesPerKnot[knotIndex + 1] = (i + 1, newHead.Item2);
                             UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
                         }
 
-                        coordinatesPerKnot[knotIndex] = newHeadCoordinates;
+                        coordinatesPerKnot[knotIndex] = newHead;
                     }
 
                     break;
                 case 'U':
-                    headKnotCoordinates = coordinatesPerKnot[knotIndex];
-                    tailKnotCoordinates = coordinatesPerKnot[knotIndex + 1];
-                    for (var j = headKnotCoordinates.Item2 + 1; j <= headKnotCoordinates.Item2 + steps; j++)
+                    head = coordinatesPerKnot[knotIndex];
+                    tail = coordinatesPerKnot[knotIndex + 1];
+                    for (var j = head.Item2 + 1; j <= head.Item2 + steps; j++)
                     {
-                        newHeadCoordinates = (headKnotCoordinates.Item1, j);
-                        if (CanTailMove(tailKnotCoordinates, newHeadCoordinates, false))
+                        var newHead = (head.Item1, j);
+                        if (CanTailMove(tail, newHead, false))
                         {
-                            coordinatesPerKnot[knotIndex + 1] = (newHeadCoordinates.Item1, j - 1);
+                            coordinatesPerKnot[knotIndex + 1] = (newHead.Item1, j - 1);
                             UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
                         }
 
-                        coordinatesPerKnot[knotIndex] = newHeadCoordinates;
+                        coordinatesPerKnot[knotIndex] = newHead;
                     }
 
                     break;
                 default:
-                    headKnotCoordinates = coordinatesPerKnot[knotIndex];
-                    tailKnotCoordinates = coordinatesPerKnot[knotIndex + 1];
-                    for (var j = headKnotCoordinates.Item2 - 1; j >= headKnotCoordinates.Item2 - steps; j--)
+                    head = coordinatesPerKnot[knotIndex];
+                    tail = coordinatesPerKnot[knotIndex + 1];
+                    for (var j = head.Item2 - 1; j >= head.Item2 - steps; j--)
                     {
-                        newHeadCoordinates = (headKnotCoordinates.Item1, j);
-                        if (CanTailMove(tailKnotCoordinates, newHeadCoordinates, false))
+                        var newHead = (head.Item1, j);
+                        if (CanTailMove(tail, newHead, false))
                         {
-                            coordinatesPerKnot[knotIndex + 1] = (newHeadCoordinates.Item1, j + 1);
+                            coordinatesPerKnot[knotIndex + 1] = (newHead.Item1, j + 1);
                             UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
                         }
 
-                        coordinatesPerKnot[knotIndex] = newHeadCoordinates;
+                        coordinatesPerKnot[knotIndex] = newHead;
                     }
                     
                     break;
