@@ -6,6 +6,7 @@ namespace AdventOfCode2022.Tests
     internal class Day13_DistressSignalTests
     {
         [Test]
+        [Ignore("work in progress")]
         public void TestSumIndicesWithCorrectOrder()
         {
             // arrange 
