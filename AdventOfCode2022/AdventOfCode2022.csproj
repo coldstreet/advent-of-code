@@ -47,6 +47,9 @@
     <None Update="Tests\Day12_HillClimbingAlgorithmTests.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Tests\Day13_DistressSignalTests.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Tests\Day99_ChallengeNameTests.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

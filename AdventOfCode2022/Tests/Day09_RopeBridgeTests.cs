@@ -25,7 +25,7 @@ namespace AdventOfCode2022.Tests
             var input = File.ReadLines("Tests/Day09_RopeBridgeTests.txt").ToArray();
 
             // act
-            var result = Day09_RopeBridge.CountTailVisitLocations(input);
+            var result = Day09_RopeBridge.CountTailVisitLocations(input, true);
 
             // assert
             Assert.AreEqual(6470, result);

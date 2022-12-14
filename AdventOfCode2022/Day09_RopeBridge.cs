@@ -2,19 +2,28 @@
 {
     public static class Day09_RopeBridge
     {
-        public static long CountTailVisitLocations(string[] input)
+        public static long CountTailVisitLocations(string[] input, bool part2 = false)
         {
             var instructions = ParseInput(input);
 
             var tailMoves = new Dictionary<(int, int), int>();
             var coordinatesPerKnot = new List<(int, int)> { (0,0), (0,0) };
+            var knotsVisible = new List<bool> { true, false };
+            if (part2)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    coordinatesPerKnot.Add((0,0));
+                    knotsVisible.Add(false);
+                }
+            }
 
             foreach (var instruction in instructions)
             {
                 var direction = instruction.Item1;
                 var steps = instruction.Item2;
 
-                MoveHeadAndTailPerDirectionAndSteps(direction, steps, tailMoves, coordinatesPerKnot);
+                MoveHeadAndTailPerDirectionAndSteps(direction, steps, tailMoves, coordinatesPerKnot, knotsVisible);
             }
 
             return tailMoves.Count();
@@ -36,92 +45,161 @@
             char direction, 
             int steps,
             Dictionary<(int, int), int> tailMoves, 
-            List<(int, int)> coordinatesPerKnot)
+            List<(int, int)> coordinatesPerKnot,
+            List<bool> knotsVisible)
         {
-            var knotIndex = 0;
-            var head = coordinatesPerKnot[knotIndex];
-            var tail = coordinatesPerKnot[knotIndex + 1];
+            var head = coordinatesPerKnot[0];
             switch (direction)
             {
                 case 'R':
-                    MoveHeadTailRight(steps, tailMoves, coordinatesPerKnot, head, tail, knotIndex);
+                    for (var x = head.Item1 + 1; x <= head.Item1 + steps; x++)
+                    {
+                        MoveRopeRight(x, 0, tailMoves, coordinatesPerKnot, knotsVisible);
+                    }
                     break;
                 case 'L':
-                    MoveHeadTailLeft(steps, tailMoves, coordinatesPerKnot, head, tail, knotIndex);
+                    for (var x = head.Item1 - 1; x >= head.Item1 - steps; x--)
+                    {
+                        MoveRopeLeft(x, 0, tailMoves, coordinatesPerKnot, knotsVisible);
+                    }
                     break;
                 case 'U':
-                    MoveHeadTailUp(steps, tailMoves, coordinatesPerKnot, head, tail, knotIndex);
+                    for (var y = head.Item2 + 1; y <= head.Item2 + steps; y++)
+                    {
+                        MoveRopeUp(y, 0, tailMoves, coordinatesPerKnot, knotsVisible);
+                    }
                     break;
                 default:
-                    MoveHeadTailDown(steps, tailMoves, coordinatesPerKnot, head, tail, knotIndex);
+                    for (var y = head.Item2 - 1; y >= head.Item2 - steps; y--)
+                    {
+                        MoveRopeDown(y, 0, tailMoves, coordinatesPerKnot, knotsVisible);
+                    }
                     break;
             }
         }
 
-        private static void MoveHeadTailDown(int steps, Dictionary<(int, int), int> tailMoves, List<(int, int)> coordinatesPerKnot, (int, int) head,
-            (int, int) tail, int knotIndex)
+        private static void MoveRopeRight(int stepIndex, int knotIndex, Dictionary<(int, int), int> tailMoves, List<(int, int)> coordinatesPerKnot, List<bool> knotsVisible)
         {
-            for (var j = head.Item2 - 1; j >= head.Item2 - steps; j--)
+            var head = coordinatesPerKnot[knotIndex];
+            var tail = coordinatesPerKnot[knotIndex + 1];
+            var newHead = (stepIndex, head.Item2);
+            var moveTail = CanTailMove(tail, newHead, true);
+            if (moveTail)
             {
-                var newHead = (head.Item1, j);
-                if (CanTailMove(tail, newHead, false))
+                coordinatesPerKnot[knotIndex + 1] = (stepIndex - 1, newHead.Item2);
+                if (knotIndex + 1 == coordinatesPerKnot.Count - 1)
                 {
-                    coordinatesPerKnot[knotIndex + 1] = (newHead.Item1, j + 1);
                     UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
                 }
+            }
 
-                coordinatesPerKnot[knotIndex] = newHead;
+            coordinatesPerKnot[knotIndex] = newHead;
+            if (coordinatesPerKnot[knotIndex + 1] != (0, 0) && moveTail && knotIndex + 2 < coordinatesPerKnot.Count)
+            {
+                knotsVisible[knotIndex + 2] = true;
+            }
+
+            knotIndex++;
+            if (moveTail && knotIndex + 1 < coordinatesPerKnot.Count && knotsVisible[knotIndex + 1])
+            {
+                // use tail as "head"
+                MoveRopeRight(coordinatesPerKnot[knotIndex].Item1, knotIndex, tailMoves, coordinatesPerKnot, knotsVisible);
             }
         }
 
-        private static void MoveHeadTailUp(int steps, Dictionary<(int, int), int> tailMoves, List<(int, int)> coordinatesPerKnot, (int, int) head,
-            (int, int) tail, int knotIndex)
+        private static void MoveRopeLeft(int stepIndex, int knotIndex, Dictionary<(int, int), int> tailMoves, List<(int, int)> coordinatesPerKnot, List<bool> knotsVisible)
         {
-            for (var j = head.Item2 + 1; j <= head.Item2 + steps; j++)
+            var head = coordinatesPerKnot[knotIndex];
+            var tail = coordinatesPerKnot[knotIndex + 1];
+
+            var newHead = (stepIndex, head.Item2);
+            var moveTail = CanTailMove(tail, newHead, true);
+            if (moveTail)
             {
-                var newHead = (head.Item1, j);
-                if (CanTailMove(tail, newHead, false))
+                coordinatesPerKnot[knotIndex + 1] = (stepIndex + 1, newHead.Item2);
+                if (knotIndex + 1 == coordinatesPerKnot.Count - 1)
                 {
-                    coordinatesPerKnot[knotIndex + 1] = (newHead.Item1, j - 1);
                     UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
                 }
+            }
 
-                coordinatesPerKnot[knotIndex] = newHead;
+            coordinatesPerKnot[knotIndex] = newHead;
+            if (coordinatesPerKnot[knotIndex + 1] != (0, 0) && moveTail && knotIndex + 2 < coordinatesPerKnot.Count)
+            {
+                knotsVisible[knotIndex + 2] = true;
+            }
+
+            coordinatesPerKnot[knotIndex] = newHead;
+            knotIndex++;
+            if (moveTail && knotIndex + 1 < coordinatesPerKnot.Count && knotsVisible[knotIndex + 1])
+            {
+                // use tail as "head"
+                MoveRopeLeft(coordinatesPerKnot[knotIndex].Item1, knotIndex, tailMoves, coordinatesPerKnot, knotsVisible);
             }
         }
 
-        private static void MoveHeadTailLeft(int steps, Dictionary<(int, int), int> tailMoves, List<(int, int)> coordinatesPerKnot, (int, int) head,
-            (int, int) tail, int knotIndex)
+        private static void MoveRopeUp(int stepIndex, int knotIndex, Dictionary<(int, int), int> tailMoves, List<(int, int)> coordinatesPerKnot, List<bool> knotsVisible)
         {
-            for (var i = head.Item1 - 1; i >= head.Item1 - steps; i--)
+            var head = coordinatesPerKnot[knotIndex];
+            var tail = coordinatesPerKnot[knotIndex + 1];
+
+            var newHead = (head.Item1, stepIndex);
+            var moveTail = CanTailMove(tail, newHead, false);
+            if (moveTail)
             {
-                var newHead = (i, head.Item2);
-                if (CanTailMove(tail, newHead, true))
+                coordinatesPerKnot[knotIndex + 1] = (newHead.Item1, stepIndex - 1);
+                if (knotIndex + 1 == coordinatesPerKnot.Count - 1)
                 {
-                    coordinatesPerKnot[knotIndex + 1] = (i + 1, newHead.Item2);
                     UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
                 }
+            }
 
-                coordinatesPerKnot[knotIndex] = newHead;
+            coordinatesPerKnot[knotIndex] = newHead;
+            if (coordinatesPerKnot[knotIndex + 1] != (0, 0) && moveTail && knotIndex + 2 < coordinatesPerKnot.Count)
+            {
+                knotsVisible[knotIndex + 2] = true;
+            }
+
+            coordinatesPerKnot[knotIndex] = newHead;
+            knotIndex++;
+            if (moveTail && knotIndex + 1 < coordinatesPerKnot.Count && knotsVisible[knotIndex + 1])
+            {
+                // use tail as "head"
+                MoveRopeUp(coordinatesPerKnot[knotIndex].Item2, knotIndex, tailMoves, coordinatesPerKnot, knotsVisible);
             }
         }
 
-        private static void MoveHeadTailRight(int steps, Dictionary<(int, int), int> tailMoves, List<(int, int)> coordinatesPerKnot, (int, int) head,
-            (int, int) tail, int knotIndex)
+        private static void MoveRopeDown(int stepIndex, int knotIndex, Dictionary<(int, int), int> tailMoves, List<(int, int)> coordinatesPerKnot, List<bool> knotsVisible)
         {
-            for (var i = head.Item1 + 1; i <= head.Item1 + steps; i++)
+            var head = coordinatesPerKnot[knotIndex];
+            var tail = coordinatesPerKnot[knotIndex + 1];
+
+            var newHead = (head.Item1, stepIndex);
+            var moveTail = CanTailMove(tail, newHead, false);
+            if (moveTail)
             {
-                var newHead = (i, head.Item2);
-                if (CanTailMove(tail, newHead, true))
+                coordinatesPerKnot[knotIndex + 1] = (newHead.Item1, stepIndex + 1);
+                if (knotIndex + 1 == coordinatesPerKnot.Count - 1)
                 {
-                    coordinatesPerKnot[knotIndex + 1] = (i - 1, newHead.Item2);
                     UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
                 }
+            }
 
-                coordinatesPerKnot[knotIndex] = newHead;
+            coordinatesPerKnot[knotIndex] = newHead;
+            if (coordinatesPerKnot[knotIndex + 1] != (0, 0) && moveTail && knotIndex + 2 < coordinatesPerKnot.Count)
+            {
+                knotsVisible[knotIndex + 2] = true;
+            }
+
+            coordinatesPerKnot[knotIndex] = newHead;
+            knotIndex++;
+            if (moveTail && knotIndex + 1 < coordinatesPerKnot.Count && knotsVisible[knotIndex + 1])
+            {
+                // use tail as "head"
+                MoveRopeUp(coordinatesPerKnot[knotIndex].Item2, knotIndex, tailMoves, coordinatesPerKnot, knotsVisible);
             }
         }
-
+        
         private static bool CanTailMove((int, int) tailCoordinates, (int, int) newHeadCoordinates, bool horizontalMove = true)
         {
             var allowed = horizontalMove 
