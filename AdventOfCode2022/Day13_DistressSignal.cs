@@ -7,128 +7,68 @@ namespace AdventOfCode2022
         public static long SumIndicesWithCorrectOrder(string[] input)
         {
             // parse input
-            var signals = new List<(string, string)>();
-            for (var i = 0; i < input.Length; i+=3)
-            {
-                signals.Add((input[i], input[i+1]));
-            }
+            var (leftSignals, rightSignals) = ParseInput(input);
 
             var validIndicesSum = 0;
-            for (var i = 0; i < signals.Count; i++)
+            for (var i = 0; i < leftSignals.Count; i++)  // iterate through the number of signal pairs given in input
             {
-                var left = signals[i].Item1;
-                var right = signals[i].Item2;
-
-                // Parse lists
-                string[] splitOn = { ",[", "]," };
-                var leftStringList = left
-                    .Substring(1, left.Length - 2)
-                    .Split(splitOn, System.StringSplitOptions.None)
-                    .ToList();
-
-               
-                var rightStringList = right
-                    .Substring(1, right.Length - 2)
-                    .Split(splitOn, System.StringSplitOptions.None)
-                    .ToList();
-
-                if (leftStringList.Count > rightStringList.Count)
+                if (!IsValidPacket((List<object>) leftSignals[i], (List<object>) rightSignals[i]))
                 {
                     continue;
                 }
 
-                var leftItems = new List<int[]>();
-                foreach (var s in leftStringList)
-                {
-                    bool isList = s.Contains('[') || s.Contains(']');
-                    var leftString = s.Replace("[", string.Empty);
-                    leftString = leftString.Replace("]", string.Empty);
-
-                    if (leftString.Contains(','))
-                    {
-                        if (isList)
-                        {
-                            leftItems.Add(leftString.Split(',').Select(int.Parse).ToArray());
-                        }
-                        else
-                        {
-                            foreach (var x in leftString.Split(',').Select(int.Parse).ToArray())
-                            {
-                                leftItems.Add(new [] { x });
-                            }
-                        }
-                    }
-                    else if (leftString.Length > 0)
-                    {
-                        leftItems.Add(new[] {int.Parse(leftString) });
-                    }
-                    else
-                    {
-                        leftItems.Add(new int[] { });
-                    }
-                }
-
-                var rightItems = new List<int[]>();
-                foreach (var s in rightStringList)
-                {
-                    bool isList = s.Contains('[') || s.Contains(']');
-                    var rightString = s.Replace("[", string.Empty);
-                    rightString = rightString.Replace("]", String.Empty);
-
-                    if (rightString.Contains(','))
-                    {
-                        if (isList)
-                        {
-                            rightItems.Add(rightString.Split(',').Select(int.Parse).ToArray());
-                        }
-                        else
-                        {
-                            foreach (var x in rightString.Split(',').Select(int.Parse).ToArray())
-                            {
-                                rightItems.Add(new[] { x });
-                            }
-                        }
-                    }
-                    else if (rightString.Length > 0)
-                    {
-                        rightItems.Add(new[] { int.Parse(rightString) });
-                    }
-                    else
-                    {
-                        rightItems.Add(new int[] { });
-                    }
-                }
-
-                if (leftItems.Count > rightItems.Count)
-                {
-                    continue;
-                }
-                
-                bool valid = true;
-                for (var j = 0; j < leftItems.Count; j++)
-                {
-                    if (!ValidSignalPart(leftItems[j], rightItems[j]))
-                    {
-                        valid = false;
-                        break;
-                    }
-                }
-
-                if (valid)
-                {
-                    validIndicesSum += i + 1;
-                }
+                validIndicesSum += i + 1;
             }
 
             return validIndicesSum;
         }
 
-        private static bool ValidSignalPart(int[] left, int[] right)
+        private static (List<object>, List<object>) ParseInput(string[] input)
         {
-            var length = Math.Min(left.Length, right.Length);
+            var leftSignals = new List<object>();
+            var rightSignals = new List<object>();
+            for (var i = 0; i < input.Length; i += 3)
+            {
+                leftSignals.Add(PacketParser.ParseInput(input[i]));
+                rightSignals.Add(PacketParser.ParseInput(input[i + 1]));
+            }
+
+            return (leftSignals, rightSignals);
+        }
+
+        private static bool IsValidPacket(List<object> left, List<object> right, bool checkArraySize = true)
+        {
+            if (checkArraySize && left.Count > right.Count)
+            {
+                return false;
+            }
+
+            var length = Math.Min(left.Count, right.Count);
             for (var i = 0; i < length; i++)
             {
-                if (left[i] > right[i])
+                if (left[i] is int l && right[i] is int r)
+                {
+                    if (!IsValidInts(l, r))
+                    {
+                        return false;
+                    }
+
+                    continue;
+                }
+
+                if (left[i] is int lInt)
+                {
+                    left[i] = new List<object> { lInt };
+                    return IsValidPacket((List<object>) left[i], (List<object>) right[i], false);
+                }
+
+                if (right[i] is int rInt)
+                {
+                    right[i] = new List<object> { rInt };
+                    return IsValidPacket((List<object>)left[i], (List<object>)right[i], false);
+                }
+
+                if (!IsValidPacket((List<object>)left[i], (List<object>)right[i]))
                 {
                     return false;
                 }
@@ -136,6 +76,71 @@ namespace AdventOfCode2022
 
             return true;
         }
+
+        private static bool IsValidInts(int left, int right)
+        {
+            return left <= right;
+        }
+    }
+
+    public static class PacketParser
+    {
+        public static List<object> ParseInput(string input)
+        {
+            var queue = new Queue<char>();
+            foreach (char x in input)
+            {
+                queue.Enqueue(x);
+            }
+
+            return ParseQueue(queue);
+        }
+
+        public static List<object> ParseQueue(Queue<char> data)
+        {
+            var elements = new List<object>();
+            data.Dequeue(); // Remove the '[' from the queue
+            while (data.Peek() != ']')
+            {
+                if (data.Peek() == ',')
+                {
+                    data.Dequeue();
+                }
+                object element = ParseElement(data);
+                elements.Add(element);
+            }
+            data.Dequeue(); // Remove the ']' from the queue
+
+            return elements;
+        }
+
+        public static object ParseElement(Queue<char> data)
+        {
+            char next = data.Peek();
+            if (char.IsDigit(next))
+            {
+                return ParseInt(data);
+            }
+
+            if (next == '[')
+            {
+                return ParseQueue(data);
+            }
+
+            throw new Exception($"Expected an int or array/list but found: {string.Join("", data)}");
+        }
+
+        public static int ParseInt(Queue<char> data)
+        {
+            string token = string.Empty;
+            while (char.IsDigit(data.Peek()))
+            {
+                token += data.Dequeue();
+            }
+            return int.Parse(token);
+        }
     }
 }
+    
+
 
