@@ -15,7 +15,7 @@ namespace AdventOfCode2022.Tests
             var result = Day13_DistressSignal.SumIndicesWithCorrectOrder(input);
 
             // assert
-            Assert.AreEqual(13, result);
+            Assert.AreEqual(5905, result);
         }
 
         [TestCase("[1,1,3,1,1]")]

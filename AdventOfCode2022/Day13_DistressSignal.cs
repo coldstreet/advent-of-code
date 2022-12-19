@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using System.Reflection.Metadata.Ecma335;
 
 namespace AdventOfCode2022
 {
@@ -12,12 +12,11 @@ namespace AdventOfCode2022
             var validIndicesSum = 0;
             for (var i = 0; i < leftSignals.Count; i++)  // iterate through the number of signal pairs given in input
             {
-                if (!IsValidPacket((List<object>) leftSignals[i], (List<object>) rightSignals[i]))
+                var result = IsValidPacket((List<object>)leftSignals[i], (List<object>)rightSignals[i]);
+                if (result == 1)
                 {
-                    continue;
+                    validIndicesSum += i + 1;
                 }
-
-                validIndicesSum += i + 1;
             }
 
             return validIndicesSum;
@@ -36,50 +35,64 @@ namespace AdventOfCode2022
             return (leftSignals, rightSignals);
         }
 
-        private static bool IsValidPacket(List<object> left, List<object> right, bool checkArraySize = true)
+        // Result
+        // 0 - failed
+        // 1 - validated
+        // 2 - unknown
+        private static int IsValidPacket(List<object> left, List<object> right)
         {
-            if (checkArraySize && left.Count > right.Count)
+            if (left.Count == 0 && right.Count > 0)
             {
-                return false;
+                return 1;
             }
 
-            var length = Math.Min(left.Count, right.Count);
-            for (var i = 0; i < length; i++)
+            for (var i = 0; i < left.Count; i++)
             {
+                if (i == right.Count)
+                {
+                    return 0;
+                }
+
                 if (left[i] is int l && right[i] is int r)
                 {
-                    if (!IsValidInts(l, r))
+                    if (l < r)
                     {
-                        return false;
+                        return 1;
                     }
 
-                    continue;
+                    if (l == r)
+                    {
+                        continue;
+                    }
+
+                    return 0;
                 }
 
                 if (left[i] is int lInt)
                 {
                     left[i] = new List<object> { lInt };
-                    return IsValidPacket((List<object>) left[i], (List<object>) right[i], false);
                 }
 
                 if (right[i] is int rInt)
                 {
                     right[i] = new List<object> { rInt };
-                    return IsValidPacket((List<object>)left[i], (List<object>)right[i], false);
                 }
 
-                if (!IsValidPacket((List<object>)left[i], (List<object>)right[i]))
+                var result = IsValidPacket((List<object>)left[i], (List<object>)right[i]);
+                if (result == 0 || result == 1)
                 {
-                    return false;
+                    return result;
                 }
+
+                // keep investigating
             }
 
-            return true;
-        }
+            if (left.Count < right.Count)
+            {
+                return 1;
+            }
 
-        private static bool IsValidInts(int left, int right)
-        {
-            return left <= right;
+            return 2;
         }
     }
 
