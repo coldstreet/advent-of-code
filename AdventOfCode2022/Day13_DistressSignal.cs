@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-
-namespace AdventOfCode2022
+﻿namespace AdventOfCode2022
 {
     public static class Day13_DistressSignal
     {
@@ -25,7 +23,12 @@ namespace AdventOfCode2022
         public static long SumIndicesOfSpecialTwoSignalsWithAllSorted(string[] input)
         {
             // parse input and add markers
-            var signals = ParseInputPart2(input);
+            var signals = new List<string>();
+            for (var i = 0; i < input.Length; i += 3)
+            {
+                signals.Add(input[i]);
+                signals.Add(input[i + 1]);
+            }
             var marker1 = "[[2]]";
             var marker2 = "[[6]]";
             signals.Add(marker1);
@@ -49,18 +52,6 @@ namespace AdventOfCode2022
             }
 
             return (leftSignals, rightSignals);
-        }
-
-        private static List<string> ParseInputPart2(string[] input)
-        {
-            var signals = new List<string>();
-            for (var i = 0; i < input.Length; i += 3)
-            {
-                signals.Add(input[i]);
-                signals.Add(input[i+1]);
-            }
-
-            return signals;
         }
 
         // Result
@@ -127,13 +118,16 @@ namespace AdventOfCode2022
         {
             public int Compare(string? s1, string? s2)
             {
+                if (s1 == null) throw new ArgumentNullException(nameof(s1));
+                if (s2 == null) throw new ArgumentNullException(nameof(s2));
+
                 var result = IsPacketInRightOrder(PacketParser.ParseInput(s1), PacketParser.ParseInput(s2));
                 if (result == 1)
                 {
                     return -1;
                 }
 
-                if (result == 2)
+                if (result == 0)
                 {
                     return 1;
                 }
