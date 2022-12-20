@@ -18,6 +18,31 @@ namespace AdventOfCode2022.Tests
             Assert.AreEqual(5905, result);
         }
 
+        [Test]
+        public void TestSumIndicesOfSpecialTwoSignalsWithAllSorted()
+        {
+            // arrange 
+            var input = File.ReadLines("Tests/Day13_DistressSignalTests.txt").ToArray();
+
+            // act
+            var result = Day13_DistressSignal.SumIndicesOfSpecialTwoSignalsWithAllSorted(input);
+
+            // assert
+            Assert.AreEqual(5905, result);
+        }
+
+        [Test]
+        public void TestCompare()
+        {
+            var signal2 = "[[6]]";
+            var signal1 = "[[2]]";
+            var signals = new List<string>() { signal2, signal1 };
+
+            var results = signals.OrderBy(_ => _, new Day13_DistressSignal.SignalComparer());
+            Assert.AreEqual("[[2]]", results.First());
+            Assert.AreEqual("[[6]]", results.Last());
+        }
+
         [TestCase("[1,1,3,1,1]")]
         [TestCase("[[1],[2,3,4]]")]
         [TestCase("[[1],4]")]

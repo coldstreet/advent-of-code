@@ -12,7 +12,7 @@ namespace AdventOfCode2022
             var validIndicesSum = 0;
             for (var i = 0; i < leftSignals.Count; i++)  // iterate through the number of signal pairs given in input
             {
-                var result = IsValidPacket((List<object>)leftSignals[i], (List<object>)rightSignals[i]);
+                var result = IsPacketInRightOrder((List<object>)leftSignals[i], (List<object>)rightSignals[i]);
                 if (result == 1)
                 {
                     validIndicesSum += i + 1;
@@ -20,6 +20,22 @@ namespace AdventOfCode2022
             }
 
             return validIndicesSum;
+        }
+
+        public static long SumIndicesOfSpecialTwoSignalsWithAllSorted(string[] input)
+        {
+            // parse input and add markers
+            var signals = ParseInputPart2(input);
+            var marker1 = "[[2]]";
+            var marker2 = "[[6]]";
+            signals.Add(marker1);
+            signals.Add(marker2);
+
+            var results = signals.OrderBy(_ => _, new SignalComparer()).ToList();
+            var indexOfMarker1 = results.IndexOf(marker1) + 1;
+            var indexofMarker2 = results.IndexOf(marker2) + 1;
+
+            return indexOfMarker1 * indexofMarker2;
         }
 
         private static (List<object>, List<object>) ParseInput(string[] input)
@@ -35,11 +51,23 @@ namespace AdventOfCode2022
             return (leftSignals, rightSignals);
         }
 
+        private static List<string> ParseInputPart2(string[] input)
+        {
+            var signals = new List<string>();
+            for (var i = 0; i < input.Length; i += 3)
+            {
+                signals.Add(input[i]);
+                signals.Add(input[i+1]);
+            }
+
+            return signals;
+        }
+
         // Result
-        // 0 - failed
-        // 1 - validated
+        // 0 - no
+        // 1 - yes
         // 2 - unknown
-        private static int IsValidPacket(List<object> left, List<object> right)
+        private static int IsPacketInRightOrder(List<object> left, List<object> right)
         {
             if (left.Count == 0 && right.Count > 0)
             {
@@ -78,7 +106,7 @@ namespace AdventOfCode2022
                     right[i] = new List<object> { rInt };
                 }
 
-                var result = IsValidPacket((List<object>)left[i], (List<object>)right[i]);
+                var result = IsPacketInRightOrder((List<object>)left[i], (List<object>)right[i]);
                 if (result == 0 || result == 1)
                 {
                     return result;
@@ -94,6 +122,26 @@ namespace AdventOfCode2022
 
             return 2;
         }
+
+        public class SignalComparer : IComparer<string>
+        {
+            public int Compare(string? s1, string? s2)
+            {
+                var result = IsPacketInRightOrder(PacketParser.ParseInput(s1), PacketParser.ParseInput(s2));
+                if (result == 1)
+                {
+                    return -1;
+                }
+
+                if (result == 2)
+                {
+                    return 1;
+                }
+
+                return 0;
+            }
+        }
+
     }
 
     public static class PacketParser
