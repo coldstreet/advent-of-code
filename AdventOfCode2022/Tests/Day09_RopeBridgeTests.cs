@@ -18,8 +18,7 @@ namespace AdventOfCode2022.Tests
             Assert.AreEqual(6470, result);
         }
 
-        [Test]
-        [Ignore("work in progress")]
+        [Test] // TODO 
         public void TestCountTailVisitLocationsWithManyKnots()
         {
             // arrange 
@@ -29,7 +28,7 @@ namespace AdventOfCode2022.Tests
             var result = Day09_RopeBridge.CountTailVisitLocations(input, true);
 
             // assert
-            Assert.AreEqual(6470, result);
+            Assert.AreEqual(4069, result); // TODO - too high
         }
     }
 }
