@@ -98,6 +98,11 @@
                     var tailStepY = newHead.Item2 - tail.Item2 > 0 ? 1 : -1;
                     coordinatesPerKnot[knotIndex + 1] = (tail.Item1, tail.Item2 + tailStepY);
                 }
+                else if (Math.Abs(newHead.Item1 - tail.Item1) == 2)
+                {
+                    var tailStepX = newHead.Item1 - tail.Item1 > 0 ? 1 : -1;
+                    coordinatesPerKnot[knotIndex + 1] = (tail.Item1 + tailStepX, tail.Item2);
+                }
                 else
                 {
                     switch (direction)
@@ -117,7 +122,7 @@
                     }
                 }
 
-                if (knotIndex + 1 == coordinatesPerKnot.Count - 1)
+                if (knotIndex + 1 == coordinatesPerKnot.Count - 1) // update the tail tracking for the last tail
                 {
                     UpdateTailLocation(tailMoves, coordinatesPerKnot[knotIndex + 1]);
                 }
