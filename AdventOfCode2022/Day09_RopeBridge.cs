@@ -145,14 +145,19 @@
                 return true;
             }
 
-            var allowed = horizontalMove 
-                ? newHeadCoordinates.Item1 != tailCoordinates.Item1 
-                : newHeadCoordinates.Item2 != tailCoordinates.Item2;
+            if (IsDirectDiagonal(newHeadCoordinates, tailCoordinates) ||
+                IsHeadAndTailOnSame(newHeadCoordinates, tailCoordinates) )
+            {
+                return false;
+            }
 
+            // not diagonal but all ready touching on same row or column
+            if (Math.Abs(newHeadCoordinates.Item1 - tailCoordinates.Item1) <= 1 || Math.Abs(newHeadCoordinates.Item2 - tailCoordinates.Item2) <= 1)
+            {
+                return false;
+            }
 
-            return !IsDirectDiagonal(newHeadCoordinates, tailCoordinates) &&
-                   !IsHeadAndTailOnSame(newHeadCoordinates, tailCoordinates) &&
-                   allowed;
+            return true;
         }
 
         private static bool IsDirectDiagonal((int, int) newHeadCoordinates, (int, int) tailCoordinates)

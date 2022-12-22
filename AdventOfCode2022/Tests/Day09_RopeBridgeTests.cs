@@ -28,7 +28,7 @@ namespace AdventOfCode2022.Tests
             var result = Day09_RopeBridge.CountTailVisitLocations(input, true);
 
             // assert
-            Assert.AreEqual(4069, result); // TODO - too high
+            Assert.AreEqual(-1, result); // TODO - last answers were 2697, 2644, 2607 - don't know if too high or low
         }
     }
 }
