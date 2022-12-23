@@ -12,7 +12,7 @@ namespace AdventOfCode2022.Tests
             var input = File.ReadLines("Tests/Day15_BeaconExclusionZoneTests.txt").ToArray();
 
             // act
-            var result = Day15_BeaconExclusionZone.NumberOfPositionsWithoutBeacon(input, 10);
+            var result = Day15_BeaconExclusionZone.NumberOfPositionsWithoutBeacon(input, 2000000);
 
             // assert
             Assert.AreEqual(0, result);
