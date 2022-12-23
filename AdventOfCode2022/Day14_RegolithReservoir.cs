@@ -37,7 +37,7 @@ namespace AdventOfCode2022
             var rockLayerCoordinates = ParseAllRockLayerCoordinates(input);
 
             var (minXforPrint, cave) = InitializeCaveWithFloor(rockLayerCoordinates);
-            PrintCave(minXforPrint, cave);
+            //PrintCave(minXforPrint, cave);
 
             int sandAtRestCount = 0;
             bool sandNotBlocked = true;
@@ -75,7 +75,7 @@ namespace AdventOfCode2022
                 }
             }
 
-            var cave = new char[1000, maxY + 3]; // todo - starting out by being dumb (i.e., not precise) with sizing to see if it will fit
+            var cave = new char[1000, maxY + 3]; // todo - starting out by being lazy (i.e., not precise) with sizing to see if it will fit
             for (int y = 0; y < cave.GetLength(1); y++)
             {
                 for (int x = 0; x < cave.GetLength(0); x++)
