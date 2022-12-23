@@ -17,5 +17,18 @@ namespace AdventOfCode2022.Tests
             // assert
             Assert.AreEqual(625, result);
         }
+
+        [Test]
+        public void TestDetermineNumberOfSandBeforeNoMoreDropsPossible()
+        {
+            // arrange 
+            var input = File.ReadLines("Tests/Day14_RegolithReservoirTests.txt").ToArray();
+
+            // act
+            var result = Day14_RegolithReservoir.DetermineNumberOfSandBeforeNoMoreDropsPossible(input);
+
+            // assert
+            Assert.AreEqual(25193, result);
+        }
     }
 }
