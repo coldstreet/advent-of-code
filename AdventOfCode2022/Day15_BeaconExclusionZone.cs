@@ -19,34 +19,38 @@
                 sensors.Add(new Sensor(new Coordinates(locations[0], locations[1]), new Coordinates(locations[2], locations[3])));
             }
 
-            var positionsWithoutBeacons = new HashSet<Coordinates>();
+            var minX = int.MaxValue;
+            var maxX = int.MinValue;
             foreach (var s in sensors)
             {
-                var distance = s.DistanceToBeacon;
-                for (int x = 0; x <= s.DistanceToBeacon; x++)
-                {
-                    for (int y = 0; y <= s.DistanceToBeacon - x; y++)
-                    {
-                        positionsWithoutBeacons.Add(new Coordinates(s.Location.X + x, s.Location.Y + y));
-                        positionsWithoutBeacons.Add(new Coordinates(s.Location.X + (-1 * x), s.Location.Y + y));
-                        positionsWithoutBeacons.Add(new Coordinates(s.Location.X + x, s.Location.Y + (-1 * y)));
-                        positionsWithoutBeacons.Add(new Coordinates(s.Location.X + (-1 * x), s.Location.Y + (-1 * y)));
-                    }
-                }
-
-                positionsWithoutBeacons.Remove(s.BeaconLocation);
+                minX = Math.Min(minX, s.Location.X - s.DistanceToBeacon);
+                maxX = Math.Max(maxX, s.Location.X + s.DistanceToBeacon);
             }
 
-            var noBeaconsInRow = 0;
-            foreach (var coordinates in positionsWithoutBeacons)
+            var cannotContainBeaconInRow = new HashSet<int>();
+            for(int x = minX; x <= maxX; x++)
             {
-                if (coordinates.X == rowToCheck)
+                foreach (var s in sensors)
                 {
-                    noBeaconsInRow++;
+                    var distance = Math.Abs(x - s.Location.X) + Math.Abs(rowToCheck - s.Location.Y);
+                    if (distance > s.DistanceToBeacon)
+                    {
+                        continue;
+                    }
+                    else if (s.BeaconLocation.X == x && s.BeaconLocation.Y == rowToCheck)
+                    {
+                        continue;
+                    }
+
+                    if (cannotContainBeaconInRow.Contains(x))
+                    {
+                        continue;
+                    }
+                    cannotContainBeaconInRow.Add(x);
                 }
             }
-            
-            return noBeaconsInRow;
+
+            return cannotContainBeaconInRow.Count;
         }
     }
 
@@ -56,5 +60,20 @@
     }
 
     public record Coordinates(int X, int Y);
+
+    public class SignalRange
+    {
+        public int StartX { get; set; }
+
+        public int EndX { get; set; }
+
+        public int Length => EndX - StartX + 1;
+
+        public SignalRange(int startX, int endX)
+        {
+            StartX = startX;
+            EndX = endX;
+        }
+    }
 }
 

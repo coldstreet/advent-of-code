@@ -15,7 +15,7 @@ namespace AdventOfCode2022.Tests
             var result = Day15_BeaconExclusionZone.NumberOfPositionsWithoutBeacon(input, 2000000);
 
             // assert
-            Assert.AreEqual(0, result);
+            Assert.AreEqual(5240818, result);
         }
     }
 }
