@@ -17,5 +17,18 @@ namespace AdventOfCode2022.Tests
             // assert
             Assert.AreEqual(5240818, result);
         }
+
+        [Test]
+        public void TestFindDistressBeacon()
+        {
+            // arrange 
+            var input = File.ReadLines("Tests/Day15_BeaconExclusionZoneTests.txt").ToArray();
+
+            // act
+            var result = Day15_BeaconExclusionZone.FindDistressBeacon(input, 4000000);
+
+            // assert
+            Assert.AreEqual(5240818, result);
+        }
     }
 }
