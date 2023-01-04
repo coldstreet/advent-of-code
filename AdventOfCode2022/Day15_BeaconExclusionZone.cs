@@ -83,8 +83,9 @@ namespace AdventOfCode2022
             }
 
             var rowWithGap = rows.First(r => r.Value.Count > 1);
-            var x = rowWithGap.Value.First().EndX + 1;
-            return x * 4000000 + rowWithGap.Key;
+            long x = rowWithGap.Value.First().EndX + 1;
+            long result = x * 4000000 + (long) rowWithGap.Key;
+            return result;
         }
 
         private static List<Sensor> ParseSensorAndBeaconInput(string[] input)

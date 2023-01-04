@@ -18,7 +18,7 @@ namespace AdventOfCode2022.Tests
             Assert.AreEqual(5240818, result);
         }
 
-        [Test, Ignore("work in progress")]
+        [Test]
         public void TestFindDistressBeacon()
         {
             // arrange 
@@ -27,8 +27,8 @@ namespace AdventOfCode2022.Tests
             // act
             var result = Day15_BeaconExclusionZone.FindDistressBeacon(input, 4000000);
 
-            // assert
-            Assert.AreEqual(1767503605, result); // too low :( 
+            // assert              
+            Assert.AreEqual(13213086906101, result);  
         }
 
         [Test]
@@ -39,59 +39,13 @@ namespace AdventOfCode2022.Tests
             {
                 new SignalRange(0, 10),
                 new SignalRange(5, 15),
-                new SignalRange(10, 20),
-                new SignalRange(15, 25),
-                new SignalRange(20, 30),
-                new SignalRange(25, 35),
-                new SignalRange(30, 40),
-                new SignalRange(35, 45),
-                new SignalRange(40, 50),
-                new SignalRange(45, 55),
-                new SignalRange(50, 60),
-                new SignalRange(55, 65),
-                new SignalRange(60, 70),
-                new SignalRange(65, 75),
-                new SignalRange(70, 80),
-                new SignalRange(75, 85),
-                new SignalRange(80, 90),
-                new SignalRange(85, 95),
-                new SignalRange(90, 100),
-                new SignalRange(95, 105),
-                new SignalRange(100, 110),
-                new SignalRange(105, 115),
-                new SignalRange(110, 120),
-                new SignalRange(115, 125),
-                new SignalRange(120, 130),
-                new SignalRange(125, 135),
-                new SignalRange(130, 140),
-                new SignalRange(135, 145),
-                new SignalRange(140, 150),
-                new SignalRange(145, 155),
-                new SignalRange(150, 160),
-                new SignalRange(155, 165),
-                new SignalRange(160, 170),
-                new SignalRange(165, 175),
-                new SignalRange(170, 180),
-                new SignalRange(175, 185),
-                new SignalRange(180, 190),
-                new SignalRange(185, 195),
-                new SignalRange(190, 200),
-                new SignalRange(195, 205),
-                new SignalRange(200, 210),
-                new SignalRange(205, 215),
-                new SignalRange(210, 220),
-                new SignalRange(215, 225),
-                new SignalRange(220, 230),
-                new SignalRange(225, 235),
-                new SignalRange(230, 240),
-                new SignalRange(235, 245),
-                new SignalRange(240, 250)
+                new SignalRange(10, 20)
             });
 
             // assert
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(0, result[0].StartX);
-            Assert.AreEqual(250, result[0].EndX);
+            Assert.AreEqual(20, result[0].EndX);
         }
 
         [Test]
@@ -126,6 +80,25 @@ namespace AdventOfCode2022.Tests
 
             // assert
             Assert.AreEqual(2, result.Count);
+        }
+
+        [Test]
+        public void TestReduceListByMergingRangesThatOverlapButWithGapV3()
+        {
+            // arrange and act
+            var result = Day15_BeaconExclusionZone.ReduceListByMergingRangesThatOverlap(new List<SignalRange>
+            {
+                new SignalRange(15, 20),
+                new SignalRange(22, 24),
+                new SignalRange(23, 25),
+                new SignalRange(11, 14),
+                new SignalRange(13, 13),
+                new SignalRange(11, 13),
+                new SignalRange(24, 24)
+            });
+
+            // assert
+            Assert.AreEqual(3, result.Count);
         }
 
         [Test]
