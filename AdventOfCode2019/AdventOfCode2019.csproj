@@ -16,6 +16,9 @@
     <None Update="Tests\Day01_TheTyrannyOfTheRocketEquationTests.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Tests\Day02_1202ProgramAlarmTests.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Tests\Day99_ChallengeNameTests.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
