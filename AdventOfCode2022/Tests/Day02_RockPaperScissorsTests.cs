@@ -1,7 +1,6 @@
-﻿using AdventOfCode2022;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
-namespace AdventOfCode2021.Tests
+namespace AdventOfCode2022.Tests
 {
     [TestFixture]
     internal class Day02_RockPaperScissorsTests
