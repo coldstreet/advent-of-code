@@ -18,5 +18,18 @@ namespace AdventOfCode2023.Tests
             // assert
             Assert.AreEqual(1867, result);
         }
+
+        [Test]
+        public void TestSumIdsOfPossibleGamesV2()
+        {
+            // arrange 
+            var input = File.ReadLines("Tests/Day02_CubeConundrumTests.txt").ToArray();
+
+            // act
+            var result = Day02_CubeConundrum.SumProductOfMinDiceNeededForGame(input);
+
+            // assert
+            Assert.AreEqual(84538, result);
+        }
     }
 }
