@@ -29,7 +29,7 @@ namespace AdventOfCode2023.Tests
             var result = Day01_Trebuchet.SumCalibrationValuesV2(input);
 
             // assert
-            Assert.AreEqual(54573, result);
+            Assert.AreEqual(54591, result);
         }
 
         [Test]
