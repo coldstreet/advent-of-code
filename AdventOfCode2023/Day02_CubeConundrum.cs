@@ -67,7 +67,6 @@
             {
                 var delimiters = new string[] { "Game ", ": ", "; " };
                 var parts = game.Split(delimiters, StringSplitOptions.None);
-                int id = int.Parse(parts[1]);
 
                 var maxBlue = 1;
                 var maxRed = 1;
