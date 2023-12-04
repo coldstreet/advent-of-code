@@ -16,7 +16,7 @@ namespace AdventOfCode2023.Tests
             var result = Day03_GearRatios.SumPartNumbers(input);
 
             // assert
-            Assert.AreEqual(0, result);
+            Assert.AreEqual(546312, result);
         }
     }
 }

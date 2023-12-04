@@ -32,24 +32,17 @@
                     }
                     else
                     {
-                        if (numbers.Count > 0)
-                        {
-                            int number = BuildNumber(numbers);
-                            if (!parts.ContainsKey(number))
-                            {
-                                parts.Add(number, 0);
-                            }
-
-                            if (isPart)
-                            {
-                                parts[number]++;
-                            }
-                        }
+                        CheckIfNumberIsPartAndUpdateList(parts, numbers, isPart);
 
                         numbers.Clear();
                         isPart = false;
                     }
                 }
+
+                CheckIfNumberIsPartAndUpdateList(parts, numbers, isPart);
+
+                numbers.Clear();
+                isPart = false;
             }
 
             int sum = 0;
@@ -61,51 +54,69 @@
             return sum;
         }
 
+        private static void CheckIfNumberIsPartAndUpdateList(Dictionary<int, int> parts, List<char> numbers, bool isPart)
+        {
+            if (numbers.Count > 0)
+            {
+                int number = BuildNumber(numbers);
+                if (!parts.ContainsKey(number))
+                {
+                    parts.Add(number, 0);
+                }
+
+                if (isPart)
+                {
+                    parts[number]++;
+                }
+            }
+        }
+
         private static bool DoesNumberInGridHavePartIdNearBy(int i, int j, char[,] grid)
         {
             int maxI = grid.GetLength(0);
             int maxJ = grid.GetLength(1);
-            int up = i - 1 >= 0 ? i - 1 : i;
-            int down = i + 1 < maxI ? i + 1 : i;
-            int left = j - 1 >= 0 ? j - 1 : j;
-            int right = j + 1 < maxJ ? j + 1 : j;
 
-            if (HasPartSymbolAdjecent(grid[up, left]))
+            int up = i - 1;
+            int down = i + 1;
+            int left = j - 1;
+            int right = j + 1;
+
+            if (up >= 0 && left >=0 && HasPartSymbolAdjecent(grid[up, left]))
             {
                 return true;
             }
 
-            if (HasPartSymbolAdjecent(grid[up, j]))
+            if (up >= 0 && HasPartSymbolAdjecent(grid[up, j]))
             {
                 return true;
             }
 
-            if (HasPartSymbolAdjecent(grid[up, right]))
+            if (up >= 0 && right < maxJ && HasPartSymbolAdjecent(grid[up, right]))
             {
                 return true;
             }
 
-            if (HasPartSymbolAdjecent(grid[i, left]))
+            if (left >= 0 && HasPartSymbolAdjecent(grid[i, left]))
             {
                 return true;
             }
 
-            if (HasPartSymbolAdjecent(grid[i, right]))
+            if (right < maxJ && HasPartSymbolAdjecent(grid[i, right]))
             {
                 return true;
             }
 
-            if (HasPartSymbolAdjecent(grid[down, left]))
+            if (down < maxI && left >= 0 && HasPartSymbolAdjecent(grid[down, left]))
             {
                 return true;
             }
 
-            if (HasPartSymbolAdjecent(grid[down, j]))
+            if (down < maxI && HasPartSymbolAdjecent(grid[down, j]))
             {
                 return true;
             }
 
-            if (HasPartSymbolAdjecent(grid[down, right]))
+            if (down < maxI && right < maxJ && HasPartSymbolAdjecent(grid[down, right]))
             {
                 return true;
             }
