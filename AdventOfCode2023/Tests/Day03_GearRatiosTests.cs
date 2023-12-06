@@ -18,5 +18,18 @@ namespace AdventOfCode2023.Tests
             // assert
             Assert.AreEqual(546312, result);
         }
+
+        [Test]
+        public void TestSumPartNumbersV2()
+        {
+            // arrange 
+            var input = File.ReadLines("Tests/Day03_GearRatios.txt").ToArray();
+
+            // act
+            var result = Day03_GearRatios.SumPartNumbersV2(input);
+
+            // assert
+            Assert.AreEqual(23339637, result); 
+        }
     }
 }
