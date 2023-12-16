@@ -29,7 +29,7 @@ namespace AdventOfCode2023.Tests
             var result = Day03_GearRatios.SumPartNumbersV2(input);
 
             // assert
-            Assert.AreEqual(23339637, result); 
+            Assert.AreEqual(87449461, result); 
         }
     }
 }

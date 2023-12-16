@@ -18,6 +18,11 @@
                     if (char.IsNumber(c))
                     {
                         numbers.Add(c);
+                        if (isPart)
+                        {
+                            continue;
+                        }
+
                         (isPart, _) = DoesNumberInGridHavePartIdNearBy(i, j, grid);
                     }
                     else
