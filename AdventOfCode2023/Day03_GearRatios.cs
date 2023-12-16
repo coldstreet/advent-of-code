@@ -1,7 +1,4 @@
-﻿using NUnit.Framework.Constraints;
-using System.Diagnostics;
-
-namespace AdventOfCode2023
+﻿namespace AdventOfCode2023
 {
     public static class Day03_GearRatios
     {
