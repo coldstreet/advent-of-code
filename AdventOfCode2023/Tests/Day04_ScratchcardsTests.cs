@@ -29,7 +29,7 @@ namespace AdventOfCode2023.Tests
             var result = Day04_Scratchcards.CountCardsAfterWinnings(input);
 
             // assert
-            Assert.AreEqual(21138, result);
+            Assert.AreEqual(7185540, result);
         }
     }
 }

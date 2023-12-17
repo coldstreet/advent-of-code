@@ -41,7 +41,7 @@
                 // Now add additional cards to preceeding sets (but don't go past last set of card #)
                 foreach (var _ in cards[key])
                 {
-                    for (int k = key + 1; k <= Math.Min(card.Keys.Count, key + count); k++)
+                    for (int k = key + 1; k <= Math.Min(cards.Count, key + count); k++)
                     {
                         cards[k].Add(cards[k].First());
                     }
@@ -69,15 +69,6 @@
             return cards;
         }
 
-        private static Card ParseInputLine(string item)
-        {
-            var parts = item.Split(new string[] { "Card ", ": ", " | " }, StringSplitOptions.RemoveEmptyEntries);
-            var keys = parts[1].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
-            var numbers = parts[2].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
-
-            return new Card(int.Parse(parts[0]), keys, numbers);
-        }
-
         private static IDictionary<int, IList<Card>> ParseInputForMultipleCards(string[] input)
         {
             var cards = new Dictionary<int, IList<Card>>();
@@ -88,6 +79,15 @@
             }
 
             return cards;
+        }
+
+        private static Card ParseInputLine(string item)
+        {
+            var parts = item.Split(new string[] { "Card ", ": ", " | " }, StringSplitOptions.RemoveEmptyEntries);
+            var keys = parts[1].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+            var numbers = parts[2].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+
+            return new Card(int.Parse(parts[0]), keys, numbers);
         }
     }
 
