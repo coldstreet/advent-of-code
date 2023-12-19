@@ -6,7 +6,7 @@ namespace AdventOfCode2023.Tests
     internal class Day05_IfYouGiveSeedFertilizerTests
     {
         [Test]
-        public void TestSomeAction()
+        public void TestDetermineLowestLocationNumber()
         {
             // arrange 
             var input = File.ReadLines("Tests/Day05_IfYouGiveSeedFertilizerTests.txt").ToArray();
@@ -15,7 +15,7 @@ namespace AdventOfCode2023.Tests
             var result = Day05_IfYouGiveSeedFertilizer.DetermineLowestLocationNumber(input);
 
             // assert
-            Assert.AreEqual(0, result);
+            Assert.AreEqual(388071289, result);
         }
     }
 }
