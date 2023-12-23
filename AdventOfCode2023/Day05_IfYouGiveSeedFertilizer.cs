@@ -28,6 +28,84 @@
             return location;
         }
 
+        public static long DetermineLowestLocationNumberV2(string[] input)
+        {
+            (IEnumerable<long> seedPairs, IEnumerable<IEnumerable<Map>> categoryMaps) = ParseInput(input);
+
+            var seedRanges = new List<(long, long)>();
+            for(int i = 0; i < seedPairs.Count(); i += 2)
+            {
+                var start = seedPairs.ElementAt(i);
+                var end = seedPairs.ElementAt(i) + seedPairs.ElementAt(i + 1) - 1;
+                seedRanges.Add((start, end));
+            }
+
+            seedRanges = MergeRanges(seedRanges);
+
+            long location = long.MaxValue;
+            foreach (var seedRange in seedRanges) 
+            {
+                var seeds = new List<long>();
+                for (long s = seedRange.Item1; s <= seedRange.Item2; s++)
+                {
+                    seeds.Add(s);
+                }
+                
+                foreach (var seed in seeds)
+                {
+                    long source = seed;
+                    foreach (var category in categoryMaps)
+                    {
+                        foreach (var map in category)
+                        {
+                            if (map.Source <= source && source <= map.Source + map.Range)
+                            {
+                                source = map.Destination - map.Source + source;
+                                break;
+                            }
+                        }
+                    }
+
+                    location = Math.Min(source, location);
+                }
+
+            }
+
+            return location;
+        }
+
+        internal static List<(long, long)> MergeRanges(IList<(long, long)> inputRanges)
+        {
+            // Sort the input ranges by their start values
+            var sortedRanges = inputRanges.OrderBy(r => r.Item1);
+
+            var mergedRanges = new List<(long, long)>();
+
+            // Initialize the current range with the first range in the sorted list
+            var currentRange = sortedRanges.First();
+
+            foreach (var range in sortedRanges.Skip(1))
+            {
+                // Check if the current range and the next range can be merged
+                if (range.Item1 <= currentRange.Item2)
+                {
+                    // Merge the ranges by taking the minimum start value and maximum end value
+                    currentRange = (Math.Min(currentRange.Item1, range.Item1), Math.Max(currentRange.Item2, range.Item2));
+                }
+                else
+                {
+                    // Add the current merged range to the result and start a new current range
+                    mergedRanges.Add(currentRange);
+                    currentRange = range;
+                }
+            }
+
+            // Add the last merged range to the result
+            mergedRanges.Add(currentRange);
+
+            return mergedRanges;
+        }
+
         private static (IEnumerable<long> seeds, IEnumerable<IEnumerable<Map>> categoryMaps) ParseInput(string[] input)
         {
             var categoryMaps = new List<List<Map>>();
